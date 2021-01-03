@@ -42,7 +42,7 @@ Syntax highlighted code block
 
 **Bold** and _Italic_ and `Code` text
 
-[Link](url) and ![Image](test.jpeg)
+[Link](test.md) and ![Image](test.jpeg)
 
 
 ![Image](https://pic.17qq.com/uploads/nhpnnomkdv.jpeg)
