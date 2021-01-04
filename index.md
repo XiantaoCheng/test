@@ -4,7 +4,11 @@ You can use the [editor on GitHub](https://github.com/XiantaoCheng/test/edit/gh-
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
+
+<div>
 $$\sum_{n=1}^\infty 1/n^2 = \frac{\pi^2}{6}$$
+</div>
+  
 
 ### Markdown
 
