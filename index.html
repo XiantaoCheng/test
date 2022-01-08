@@ -55,7 +55,7 @@ var game = new Phaser.Game(config);
 
 function create() {
     var c;
-    for(var i=0;i<5;i++){
+    for(var i=0;i<50;i++){
         var x=Math.random()*400+50;
         var y=Math.random()*400+50;
         var vx=Math.random()*100-50;
@@ -71,6 +71,7 @@ function create() {
 
 function update() {
     dropEvent(objs);
+    BEvent(objs);
     moveEvent(objs);
     colEvent(objs);
     if(spaceKey.isDown) {
@@ -84,6 +85,18 @@ function dropEvent(objs) {
         if(objs[i].y<500-objs[i].radius) {
             objs[i].m_v[0]+=g[0]*dt;
             objs[i].m_v[1]+=g[1]*dt;
+        }
+    }
+}
+
+function BEvent(objs) {
+    var B=0.1;
+    var v;
+    for(var i=0;i<objs.length;i++) {
+        if(objs[i].y<500-objs[i].radius) {
+            v=objs[i].m_v;
+            objs[i].m_v[0]+=B*v[1]*dt;
+            objs[i].m_v[1]+=-B*v[0]*dt;
         }
     }
 }
