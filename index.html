@@ -1,3 +1,28 @@
+<!--
++[返回目录]
+
+LaTeX数学记号::https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
++[打开](,LaTeX数学记号)
+地址::C:\Users\cheng\Documents\GitHub\test\index.html
++[保存文本](,保存网页)
+
+-->
+
+<html>
+  <head>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!--
+Nini, 打开JS编译器(文件)
+parser
+保存:...
+-->
+
+<script>
+
+/*
++[J函数](,JS版本)
+*/
+
 function arrayRemove(arr,value) {
     a=arr.filter(function(ele) {
             return ele!=value;
@@ -10,7 +35,7 @@ class NetP {
     constructor(name,text='') {
         this.m_master='';
         this.m_needed='';
-        this.m_created='';
+        this.m_creator='';
         this.m_dev='';
         this.m_var='';
 
@@ -108,28 +133,25 @@ class NetP {
 }
 
 
-var a=new NetP('a');
-var b=new NetP('b');
-var c=new NetP('c');
-
-a.con(c,b)
-print(a.info())
-
-
-D1=20;
-D2=10;
-1/(1/2*(3/D2-1/D1))
 /*
 记住"Matlab"
 Nini, 打开动作(库)
 Nini, 打开JS编译器(文件)
 +[J函数](,JS版本)
+
+测试:...
 */
 /*
 保存:...
 +[J函数](,JS版本)
-allEffects
+Reason_oneStep
 J函数(JS版本,)
+
+m_needed
+
+参考::https://www.freecodecamp.org/news/how-to-clone-an-array-in-javascript-1d3183468f6a/
++[打开](,参考)
+[:]
 */
 
 
@@ -148,15 +170,19 @@ class Karma {
         this.m_eoi=0;
         this.m_clause=[];
         this.m_clauseAnd=true;
+
         this.m_clauseNew=[];
         this.m_clauseCollect=false;
         this.m_clauseOut=false;
         this.m_clauseIn=false;
+
         this.m_not=false;
         this.m_no=false;
         this.m_buildMode=false;
+
         this.m_listMP='';
         this.m_restricted=false;
+
         this.m_ranger='';
         this.m_rangType=false
         this.m_stage=0;
@@ -436,11 +462,154 @@ Reason_oneStep
 delete
 list_have
 info_cause
+setRangers
 */
 
-    //newMap(pool,areaType,list_new) {
-    newMap(list_map,areaType,list_new) {
-        // list_map=this.rangeList(pool,areaType,list_new);
+
+    mapListFromRange() {
+        var list_map=[];
+        if(this.m_rangType==true) {
+            if(this.m_ranger.m_map=='') {
+                list_map=[];
+            }
+            
+            else {
+                list_map=[...this.m_ranger.m_map.m_con];
+            }
+        }
+        
+        else if(this.m_ranger.m_symbol.m_db[0]==this.m_symbol) {
+            if(this.m_ranger.m_map.m_db[0]=='') {
+                list_map=[];
+            }
+            
+            else {
+                list_map=[this.m_ranger.m_map.m_db[0]];
+            }
+        }
+        
+        else if(this.m_ranger.m_symbol.m_db[1]==this.m_symbol) {
+            if(this.m_ranger.m_map.m_db[1]=='') {
+                list_map=[];
+            }
+            
+            else {
+                list_map=[this.m_ranger.m_map.m_db[1]];
+            }
+        }
+        
+        else {
+            print('Warning! Undefined situation.');
+        }
+        return list_map;
+    }
+
+
+    mapListFromPool_normal(pool) {
+        var list_map=[];
+        var name=this.m_symbol.m_name;
+
+        if(name.length>0 & (name[0]=='_' | name[0]=='~')) {
+            list_have=dictToList(pool);
+            list_map=[];
+            
+            for(var i=0;i<list_have.length;i++) {
+                var point=list_have[i];
+                if(point.m_needed=='' | (point.m_needed!='' & point.m_creator!='')) {
+                    list_map.push(point);
+                }
+            }
+        }
+        
+        else {
+// print(undefined===[])
+            list_map=pool[this.m_symbol.m_name];
+            if(list_map===undefined) {
+                list_map=[];
+            }
+        }
+        return list_map;
+    }
+    
+
+    mapList_is(ranger,pool) {
+        if(ranger.m_symbol.m_db[0]=='' | ranger.m_symbol.m_db[1]=='') {
+            return this.mapListFromPool_normal(pool);
+        }
+        if(ranger.m_symbol.m_db[0]==this.m_symbol & ranger.m_map.m_db[1]!='') {
+            return [ranger.m_map.m_db[1]];
+        }
+        if(ranger.m_symbol.m_db[1]==this.m_symbol & ranger.m_map.m_db[0]!='') {
+            return [ranger.m_map.m_db[0]];
+        }
+        return this.mapListFromPool_normal(pool);
+    }
+
+    allCauses() {
+        var cause=this;
+        var list_km=[];
+        
+        while(cause.m_cause!='') {
+            cause=cause.m_cause;
+            list_km.push(cause);
+        }
+        return list_km;
+    }
+
+    mapList_that(ranger) {
+        var list_cause=ranger.allCauses();
+        var list_map=[];
+        
+        for(var i=0;i<list_cause.length;i++) {
+            var cause=list_cause[i];
+            var pt_map=cause.m_map;
+            if(pt_map!='' & !list_map.includes(pt_map)) {
+                list_map.push(pt_map);
+            }
+        }
+        return list_map;
+    }
+
+    //rangeList(pool,areaType,list_new) {
+    rangeList(pool,list_new) {
+        var list_map=[];
+
+        if(this.m_listMP!=='') {
+            return this.m_listMP;
+        }
+        
+        else if(this.m_ranger!='') {
+            var ranger=this.m_ranger;
+            var nameR=this.m_ranger.m_symbol.m_name;
+            if(nameR=='[is]') {
+                list_map=this.mapList_is(this.m_ranger,pool);
+            }
+            
+            else if(nameR=='[那]') {
+                list_map=this.mapList_that(this.m_ranger);
+            }
+            
+            else if(this.m_ranger.isType('非回答新建') &  this.m_symbol.m_con.includes(this.m_ranger.m_symbol)) {
+                list_map=this.mapListFromPool_normal(pool);
+            }
+            
+            else {
+                list_map=this.mapListFromRange();
+            }
+        }
+        
+        else {
+            list_map=this.mapListFromPool_normal(pool);
+        }
+        this.m_listMP=list_map;
+        return list_map;
+    }
+
+
+    newMap(pool,areaType,list_new) {
+    //newMap(list_map,areaType,list_new) {
+        var list_map=this.rangeList(pool,list_new);
+
         // var list_map=[];
         var name;
         if(this.m_buildMode==false | areaType==false) {
@@ -503,6 +672,7 @@ info_cause
                         list_need.push(point);
                     }
                 }
+
                 point=this.m_map;
                 this.map(this.nextInlist(point,list_need));
                 if(this.m_map=='') {
@@ -720,7 +890,7 @@ list_have
 /*
 +[J函数](,JS版本)
 length
-new NetP
+newMap
 */
 
     Reason_oneStep(pool) {
@@ -980,6 +1150,181 @@ new NetP
         return [change,list_new];
     }
 
+    isVirtual() {
+        var name=this.m_symbol.m_name;
+        if(name.length>1 & name[0]=='[' & name[name.length-1]==']') {
+            return true;
+        }
+        
+        else {
+            return false;
+        }
+    }
+
+
+    isSpecialRanger() {
+        var name=this.m_symbol.m_name;
+        if(name=='[is]' | name=='[那]') {
+            return true;
+        }
+        return false;
+    }
+
+    isType(str_type) {
+        var name=this.m_symbol.m_name;
+        if(infoInStr('引用',str_type)) {
+            if(!this.isVirtual() | this.m_buildMode==true) {
+                return false;
+            }
+        }
+        if(infoInStr('新建',str_type)) {
+            if(infoInStr('非新建',str_type)) {
+                if(this.m_buildMode==true) {
+                    return false;
+                }
+            }
+            
+            else if(this.m_buildMode==false) {
+                return false;
+            }
+        }
+        if(infoInStr('动作',str_type)) {
+            if(!this.isVirtual() | this.m_buildMode==false) {
+                return false;
+            }
+        }
+        if(infoInStr('内置',str_type)) {
+            if(!this.isPreDefined()) {
+                return false;
+            }
+        }
+        if(infoInStr('特殊范围',str_type)) {
+            if(!this.isSpecialRanger()) {
+                return false;
+            }
+        }
+        if(infoInStr('否定',str_type)) {
+            if(name=='' | name[0]!='~') {
+                return false;
+            }
+        }
+        if(infoInStr('通用',str_type)) {
+            if(name=='' | name[0]!='_') {
+                return false;
+            }
+        }
+        if(infoInStr('普通',str_type)) {
+            if(this.isVirtual()) {
+                return false;
+            }
+        }
+        if(infoInStr('端点',str_type)) {
+            if(infoInStr('非端点',str_type)) {
+                if(this.m_ranger=='') {
+                    return false;
+                }
+            }
+            
+            else if(this.m_ranger!='') {
+                return false;
+            }
+        }
+        if(infoInStr('回答',str_type)) {
+            var an_type=true;
+            if(this.m_map=='' | this.m_map.m_needed==this | this.m_map.m_needed=='') {
+                an_type=false;
+            }
+            if(infoInStr('非回答',str_type)) {
+                if(an_type) {
+                    return false;
+                }
+            }
+            
+            else if(!an_type) {
+                return false;
+            }
+        }
+        if(infoInStr('限制',str_type)) {
+            if(this.m_restricted==false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    setRangers(causes='') {
+        var connecting='';
+        var connected='';
+        var caseNo=100;
+        if(causes=='') {
+            causes=[];
+        }
+        
+        else if(this.isType('非新建普通链节')) {
+            
+            for(var i=0;i<causes.length;i++) {
+                var cause=causes[i];
+                if(cause.m_symbol.m_db[0]==this.m_symbol | cause.m_symbol.m_db[1]==this.m_symbol) {
+                    if(cause.isType('特殊范围')) {
+                        connected=cause;
+                        break;
+                    }
+                    
+                    else if(cause.isType('普通非新建') & caseNo>3) {
+                        connected=cause;
+                        caseNo=3;
+                    }
+                    
+                    else if(cause.isType('新建') & caseNo>5) {
+                        connected=cause;
+                        caseNo=5;
+                    }
+                }
+                
+                else if(this.m_symbol.m_db[0]==cause.m_symbol | this.m_symbol.m_db[1]==cause.m_symbol) {
+                    if(cause.isType('引用') & caseNo>2) {
+                        connecting=cause;
+                        caseNo=2;
+                    }
+                    
+                    else if(cause.isType('普通非新建') & caseNo>4) {
+                        connecting=cause;
+                        caseNo=4;
+                    }
+                    
+                    else if(cause.isType('新建') & caseNo>6) {
+                        connecting=cause;
+                        caseNo=6;
+                    }
+                }
+            }
+            if(connected!='') {
+                this.m_ranger=connected;
+            }
+            
+            else if(connecting!='') {
+                this.m_ranger=connecting;
+                this.m_rangType=true;
+            }
+        }
+        causes=[...causes,this];
+        
+        for(var i=0;i<this.m_clause.length;i++) {
+            var con=this.m_clause[i];
+            con.setRangers(causes);
+        }
+        
+        for(var i=0;i<this.m_yese.length;i++) {
+            var end=this.m_yese[i];
+            end.setRangers(causes);
+        }
+        
+        for(var i=0;i<this.m_noe.length;i++) {
+            var end=this.m_noe[i];
+            end.setRangers(causes);
+        }
+    }
 
     allEffects() {
         var list_effects=[this];
@@ -1000,6 +1345,17 @@ new NetP
         }
         return list_effects;
     }
+
+
+    causeEnd() {
+        var cause=this;
+        
+        while(cause.m_cause!='') {
+            cause=cause.m_cause;
+        }
+        return cause;
+    }
+
 
     info() {
         var map,str_info;
@@ -1036,14 +1392,30 @@ new NetP
 }
 
 
+function infoInStr(string,str_info) {
+    a=str_info.includes(string);
+    return a;
+}
 
+
+function dictToList(dict_pt) {
+    var list_pt=[];
+    
+    for(var i=0;i<dict_pt.length;i++) {
+        var term=dict_pt[i];
+        list_pt=[...list_pt,dict_pt[term]];
+    }
+    return list_pt;
+}
 
 
 
 
 /*
+oneStep
+
 stateRelation
-name_m
+setRangers
 nextInlist
 concat
 测试(J函数):...
@@ -1052,12 +1424,18 @@ concat
 /*
 +[J函数](,JS版本)
 
+测试:...
 测试list:...
-+[新建阅读窗口](,测试list)
-str
++[新建阅读窗口](,测试)
+Object
 
 保存:...
 +[新建阅读窗口](,保存)
+setRange
+readSubCode_tokener
+buildPoints_tokener
+pool
+writeStdCode
 */
 
 
@@ -1141,7 +1519,7 @@ function writeStdCode_karma(karma,list_pt) {
 }
 
 /*
-
+do
 保存NetPStack:...
 */
 
@@ -1150,6 +1528,31 @@ class NetPStack {
     constructor() {
         this.m_builtStack=[{}];
         this.m_undefinedStack=[{}];
+    }
+
+    info() {
+        var info='',info_stack='';
+        
+        info+='Built: ';
+        for(var i in this.m_builtStack) {
+            info_stack=''
+            for(var key in this.m_builtStack[i]) {
+                info_stack+=`${key}:${this.m_builtStack[i][key].info()},`;
+            }
+            info+=`{${info_stack}},`;
+        }
+        
+        info+='<br>Undefined: ';
+        for(var i in this.m_undefinedStack) {
+            info_stack=''
+            for(var key in this.m_undefinedStack[i]) {
+                info_stack+=`${key}:${this.m_undefinedStack[i][key].info()},`;
+            }
+            info+=`{${info_stack}},`;
+        }
+        info+=`<br>`;
+        return info;
+    
     }
 
     popBuilt() {
@@ -1263,28 +1666,26 @@ class NetPStack {
         else {
             return;
         }
-        // if(km0.isType('新建') | km0.m_symbol.m_name=='[那]') {
-        if(km0.m_symbol.m_name=='[那]') {
-            insertPtIntotKarma_back(km0,netP);
+
+        if(km0.isType('新建') | km0.m_symbol.m_name=='[那]') {
+            this.insertPtIntotKarma_back(km0,netP);
         }
         
-        // else if(km0.isType('普通非新建') | km0.m_symbol.m_name=='[is]') {
-        else if(km0.m_symbol.m_name=='[is]') {
+        else if(km0.isType('普通非新建') | km0.m_symbol.m_name=='[is]') {
             if(otherP=='' | otherP.m_master=='') {
                 this.insertPtIntotKarma_back(km0,netP);
             }
             
-            // else if(otherP.m_master in km0.allCauses()) {
-            //     this.insertPtIntotKarma_back(km0,netP);
-            //}
+            else if(km0.allCauses().includes(otherP.m_master)) {
+                this.insertPtIntotKarma_back(km0,netP);
+            }
             
             else {
                 this.insertPtIntotKarma_front(km0,netP);
             }
         }
-        
-        //else if(km0.isType('引用')) {
-        else {
+        else if(km0.isType('引用')) {
+        //else {
             this.insertPtIntotKarma_front(km0,netP);
         }
     }
@@ -1303,7 +1704,7 @@ class NetPStack {
                     pt=dict_undef[term];
                     if(pt.m_master=='') {
                         km_head=pt.m_con[0].m_master;
-                        // this.insertPtIntotKarma(km_head,pt);
+                        this.insertPtIntotKarma(km_head,pt);
                     }
                 }
             }
@@ -1317,17 +1718,16 @@ class NetPStack {
             dict_len2=Object.keys(dict_undef2).length;
 
             if(dict_len>dict_len2) {
-            
-            for(var term in dict_undef) {
-                if(dict_undef2[term]==undefined) {
-                    pt=dict_undef[term];
-                    if(pt.m_master=='') {
-                        km_head=pt.m_con[0].m_master;
-                        this.insertPtIntotKarma(km_head,pt);
+                for(var term in dict_undef) {
+                    if(dict_undef2[term]==undefined) {
+                        pt=dict_undef[term];
+                        if(pt.m_master=='') {
+                            km_head=pt.m_con[0].m_master;
+                            this.insertPtIntotKarma(km_head,pt);
+                        }
                     }
                 }
             }
-        }
         }
 
         this.m_builtStack.pop();
@@ -1386,6 +1786,56 @@ class NetPStack {
 
 
 class Parser {
+
+    readSubCode_tokener(code) {
+        var list_karma=[];
+        var karma,pointStack;
+        
+        while(code!='') {
+            code=code.replace(/^[ \t\n]+/,'');
+            if(code=='') {
+                break;
+            }
+
+//            code,result=removeComment(code);
+//            if(result==true) {
+//                continue;
+//            }
+            
+            else {
+                [code,karma,pointStack]=this.chainToken(code);
+                pointStack.leaveClause();
+                karma=karma.causeEnd();
+                karma.setRangers();
+                list_karma.push(karma);
+                if(code!='' & code[0]==';') {
+                    code=code.slice(1,code.length);
+                }
+            }
+        }
+        return list_karma;
+    }
+
+/*
+buildNetP
+*/
+
+    buildPoints_tokener(code) {
+        code=code.replace(/^[ \t\n\r]*/,'');
+
+        var list_pt=[],netP;
+        var pointStack=new NetPStack();
+
+        while(code!='') {
+            [code,netP,pointStack]=this.netPToken(code,pointStack);
+            list_pt.push(netP);
+            code=code.replace(/^\[-?\d+,-?\d+\]/,'');
+            code=code.replace(/^[ \t\n\r;]*/,'');
+
+        }
+        return list_pt;
+    }
+
 
     chainToken(code,pointStack='') {
         var karma;
@@ -1462,7 +1912,7 @@ class Parser {
         
         else {
             print('\n\n\nIllegal connection symbol!\nCode:',code);
-            //raise Exception('Illegal connection symbol!');
+            throw 'Illegal connection symbol!';
         }
         code=code.replace(/^[ \t]*/,'');
         return [code,typeCon];
@@ -1476,7 +1926,7 @@ class Parser {
         while(true) {
             code=code.replace(/^[ \t\n]*/,'');
             if(code=='') {
-                //raise Exception('Error! Unbalanced bracket!');
+                throw 'Error! Unbalanced bracket!';
             }
             
             else if(code[0]=='}') {
@@ -1516,7 +1966,7 @@ class Parser {
             
             else if(code[0]!=',') {
                 print('\n\n\n\nError! Ilegal splitting type!\nCode:',code);
-                //raise Exception('Error! Ilegal splitting type!');
+                throw 'Error! Ilegal splitting type!';
             }
             
             else {
@@ -1530,7 +1980,7 @@ class Parser {
 
     karmaToken(code,pointStack) {
         if(code=='') {
-            //raise Exception('Error! Invalid karma detected!');
+            throw 'Error! Invalid karma detected!';
         }
 
         var buildType=false;
@@ -1553,7 +2003,7 @@ class Parser {
             code=code.replace(/^[\n\t ]*/,'');
             if(code=='' | code[0]!='}') {
                 print('\n\n\nError! Unbalanced bracket.\nCode:',code);
-                //raise Exception('Error! Unbalanced bracket.');
+                throw 'Error! Unbalanced bracket.';
             }
             
             else {
@@ -1566,12 +2016,12 @@ class Parser {
 
 
     netPToken(code,pointStack) {
-        var title=/^[\w \[\]~#.+=\-^/*\\!<\']*|^\[>=?\]/;
+        var title=/^[\w\u3000\u3400-\u4DBF\u4E00-\u9FFF \[\]~#.+=\-^/*\\!<\']*|^\[>=?\]/;
         var name=code.match(title)[0];
         code=code.replace(title,'');
         if(name=='') {
             print('\n\n\nError! Invalid name.\nCode:',code);
-            //raise Exception('Error! Invalid name.');
+            throw 'Error! Invalid name.';
         }
 
 
@@ -1590,7 +2040,7 @@ class Parser {
             [code,text]=this.textToken(code);
             if(code=='' | code[0]!='\"') {
                 print(code);
-                //raise Exception('Error! Unbalanced quote!');
+                throw 'Error! Unbalanced quote!';
             }
             code=code.slice(1,code.length);
         }
@@ -1600,13 +2050,13 @@ class Parser {
             code=code.replace(title,'');
             if(code=='' | code[0]!=',') {
                 print(code);
-                //raise Exception('Error! Ilegal net point format. A net point must be title"text"(title,title)');
+                throw 'Error! Ilegal net point format. A net point must be title"text"(title,title)';
             }
             code=code.slice(1,code.length);
             con1_name=code.match(title)[0];
             code=code.replace(title,'');
             if(code=='' | code[0]!=')') {
-                //raise Exception('Error! Unbalanced bracket in a net point format!');
+                throw 'Error! Unbalanced bracket in a net point format!';
             }
             code=code.slice(1,code.length);
         }
@@ -1618,7 +2068,6 @@ class Parser {
         netP.m_text=text;
         return [code,netP,pointStack];
     }
-
 
 
 
@@ -1669,9 +2118,688 @@ class Parser {
         }
         
         else {
-            //raise Exception('Error! Ilegal connection type!');
+            throw 'Error! Ilegal connection type!';
         }
         effect.m_cause=karma;
     }
 
 }
+
+
+function info_PtList(list_pt) {
+    var info_pt='';
+    for(var i=0;i<list_pt.length;i++) {
+        var pt=list_pt[i];
+        info_pt+=pt.info()+','
+    }
+
+    return `[${info_pt}]`;
+}
+
+
+function info_PtPool(pool_pt) {
+    var info_pt='';
+    for(var key in pool_pt) {
+        var list_pt=pool_pt[key];
+        info_pt+=key+`: ${info_PtList(list_pt)},`;
+    }
+
+    return `{${info_pt}}`;
+}
+
+function printPtList(list_pt) {
+    print(info_PtList(list_pt));
+}
+
+function printPtPool(pool_pt) {
+    print(info_PtPool(pool_pt));
+}
+
+
+function mergeArrays(list0,list1) {
+    for(var j=0;j<list1.length;j++) {
+        if(!list0.includes(list1[j])) {
+            list0.push(list1[j]);
+        }
+    }
+}
+
+/*
++[J函数](,JS版本)
+
+保存run_code:...
+*/
+
+function run_code_line(km,list_pt) {
+    var code,list_km,list_new;
+
+    //[code,km]=parser.chainToken(code0);
+    list_km=km.allEffects();
+    
+    list_km[0].m_stage=1;
+    var change=true,change1;
+    
+    while(change) {
+        change=false;
+        for(var i=0;i<list_km.length;i++) {
+            [change1,list_new]=list_km[i].Reason_oneStep(list_pt);
+            karma=list_km[i];
+            //print(karma.info(),list_new.length);
+            mergeArrays(list_pt,list_new);
+    
+            if(change1 & !change) {
+                change=true;
+            }
+        }
+        //printPtList(list_pt);
+        //print(change);
+        //print();
+    }
+    return code;
+}
+
+function run_code(code0,list_pt) {
+    var code1=code0;
+    var parser=new Parser();
+    list_km=parser.readSubCode_tokener(code0);
+
+    for(var i in list_km) {
+        run_code_line(list_km[i],list_pt);
+    }
+
+    return code0;
+}
+
+
+
+/*
+chain
++[J函数](,JS版本)
+测试stdCode:...
+测试Parser:...
+测试:...
++[J函数](,测试)
++[新建阅读窗口](,测试)
+*/
+/*
++[J函数](,JS版本)
+do
+run_code_line
++[新建阅读窗口](,测试)
+*/
+
+function listFromPt(pt) {
+    var list_pt=[];
+
+    if(pt=='') {
+        return list_pt;
+    }
+
+    for(var i=0;i<pt.m_con.length;i++) {
+        if(pt.m_con[i].m_name=='的' & pt.m_con[i].m_db[1]!='') {
+            list_pt.push(pt.m_con[i].m_db[1]);
+        }
+    }
+    return list_pt;
+}
+
+
+class StCore {
+    constructor() {
+        this.m_parser=new Parser();
+        this.m_lib='';
+        this.m_idea='';
+    }
+
+    do(code,pt_in='',list_global=[]) {
+        var list_pt=listFromPt(pt_in)
+        var list_new=[];
+        var list_km=[];
+
+        mergeArrays(list_pt,list_global);
+        if(!list_pt.includes(pt_in) & pt_in!='') {
+            list_pt.push(pt_in);
+        }
+
+        [code,list_km]=this.run_code(code,list_pt,list_new);
+        this.operation(list_new);
+        
+        for(var i=0;i<list_new.length;i++) {
+            var pt=list_new[i],pt_de;
+            pt_de=new NetP('的');
+            pt_de.con(pt_in,pt);
+        }
+    
+        return [code,list_km];
+    }
+
+    make(code,pt_in='') {
+        var list_pt=this.m_parser.buildPoints_tokener(code);
+        if(pt_in==='') {
+            return list_pt
+        }
+        for(var i in list_pt) {
+            var pt=list_pt[i];
+            new NetP('的').con(pt_in,pt);
+        }
+        return list_pt;
+    }
+
+/*
+保存run_code_line:...
+*/
+
+    run_code_line(km,list_pt,list_ns) {
+        var code,list_km,list_new
+        var karma,int_result=false;
+        var pool=listPt2poolPt(list_pt);
+
+        list_km=km.allEffects();
+        
+        list_km[0].m_stage=1;
+        var change=true,change1;
+
+        while(change) {
+            change=false;
+            for(var i=0;i<list_km.length;i++) {
+                [change1,list_new]=list_km[i].Reason_oneStep(pool);
+                karma=list_km[i];
+
+//print(karma.info(),karma.m_interp);
+                if(karma.m_interp) {
+                    int_result=this.think(karma.m_map);
+//print(int_result);
+                    if(!int_result) {
+                        karma.m_map='';
+                    }
+                }
+
+//printPtList(karma.m_listMP)
+//printPtList(list_new);
+                listPtIntoPoolPt(pool,list_new);
+                mergeArrays(list_pt,list_new);
+                mergeArrays(list_ns,list_new);
+        
+                if(change1 & !change) {
+                    change=true;
+                }
+            }
+        }
+        return true;
+    }
+    
+    run_code(code0,list_pt,list_ns=[]) {
+        var code1=code0,list_km;
+        var parser=this.m_parser;
+
+        list_km=parser.readSubCode_tokener(code0);
+
+        for(var i in list_km) {
+            this.run_code_line(list_km[i],list_pt,list_ns);
+        }
+
+        return [code0,list_km];
+    }
+
+    act(pt_code,pt) {
+        var code1=pt_code.m_text;
+        var list_km=[],list_new=[],result=false;
+        var parser=this.m_parser;
+    
+        list_km=parser.readSubCode_tokener(code1);
+    
+        list_km[0].m_listMP=[pt];
+        list_km[0].m_restricted=true;
+
+        result=this.run_code_line(list_km[0],[pt_code],list_new);
+        if(result) {
+            this.operation(list_new);
+        }
+        return result;
+    }
+
+    operation(list_pt) {
+        var list_del=[];
+        for(var i=0;i<list_pt.length;i++) {
+    //    for(var i=list_pt.length-1;i>=0;i--) {
+            var pt=list_pt[i];
+            var operated=false;
+            var sbj=pt.m_db[0],obj=pt.m_db[1];
+
+            if(pt.m_name=='[del]') {
+                this.opDel(pt,list_pt,list_del);
+                operated=true;
+            }
+            else if(pt.m_name=='[消息窗口]') {
+                this.opMsgWin(pt);
+                operated=true;
+            }
+            else if(pt.m_name=='[左连]') {
+                this.opConnect(sbj,obj,0);
+                operated=true;
+            }
+            else if(pt.m_name=='[右连]') {
+                this.opConnect(sbj,obj,1);
+                operated=true;
+            }
+            else if(pt.m_name.length>1 & pt.m_name[0]=='[' & pt.m_name[pt.m_name.length-1]==']') {
+                this.opLibDefined(pt);
+                operated=true;
+            }
+            if(operated) {
+                list_del.push(i);
+            }
+        }
+
+        for(var i=list_del.length;i>0;i--) {
+            var i_del=list_del[i-1];
+            var pt_del=list_pt[i_del];
+            list_pt.splice(i_del,1);
+            pt_del.delete();
+            //delete pt_del;
+        }
+    }
+    
+    opMsgWin(action) {
+        var obj=action.m_db[1];
+        var name,text;
+        if(obj=='' & action.m_text=='') {
+            return;
+        }
+        else if(action.m_text=='') {
+            name=obj.info();
+            text=obj.m_text;
+        }
+        else if(obj=='') {
+            name='消息';
+            text=action.m_text;
+        }
+        alert(`${name}: ${text}`);
+    }
+    
+    opDel(action,list_pt,list_del) {
+        if(action.m_db[1]=='') {
+            return;
+        }
+        var pt_del=action.m_db[1];
+        pt_del.delete()
+
+        if(pt_del in list_del) {
+            return;
+        }
+        else {
+            list_del.push(list_pt.indexOf(pt_del));
+        }
+    }
+
+    opConnect(sbj,obj,i) {
+        if(sbj=='') {
+            return;
+        }
+        sbj.disconnect_i(i);
+        sbj.connect(obj,i);
+    }
+
+    opLibDefined(action) {
+        var list_pt=listFromPt(this.m_lib);
+        var name=action.m_name.slice(1,action.m_name.length-1);
+        var result=false;
+
+        for(var i in list_pt) {
+            var pt=list_pt[i];
+            if(name===list_pt[i].m_name) {
+                result=this.act(list_pt[i].m_text,action);
+                if(result) {
+                    break;
+                }
+            }
+        }
+    }
+
+think(question,list_new) {
+    var result=false;
+    var list_pt=listFromPt(this.m_idea);
+    var name=question.m_name.slice(1,question.m_name.length-1);
+
+    for(var i in list_pt) {
+        var pt=list_pt[i];
+        if(name===list_pt[i].m_name) {
+            result=this.match(list_pt[i],question);
+            if(result) {
+                return true;
+            }
+        }
+    }
+    result=this.termBuiltin(question);
+    return result;
+}
+
+match(pt_A,pt_Q) {
+    var code1=pt_A.m_text;
+    var list_km=[],list_new=[],result=false;
+    var parser=this.m_parser;
+
+    list_km=parser.readSubCode_tokener(code1);
+
+    list_km[0].m_listMP=[pt_Q];
+    list_km[0].m_restricted=true;
+
+    result=this.run_code_line(list_km[0],[pt_A],list_new);
+    return result;
+}
+
+termBuiltin(question) {
+    var sbj,obj;
+    sbj=question.m_db[0];
+    obj=question.m_db[1];
+    
+    if(question.m_name=='[m_name]') {
+        return this.answerQuestion(question);
+    }
+    
+    return false;
+}
+
+answerQuestion(question) {
+    var name=question.m_name;
+    if(name.length<2) {
+        return false;
+    }
+    if(name[0]==='[' & name[name.length-1]===']') {
+        question.m_name=name.slice(1,name.length-1);
+        question.m_creator='Nini';
+    }
+    return true;
+}
+
+}
+
+function listPt2poolPt(list_pt) {
+    var pool={};
+    
+    for(var i=0;i<list_pt.length;i++) {
+        var pt=list_pt[i];
+        var name=pt.m_name;
+        
+        if(pool[name]===undefined) {
+            pool[name]=[pt];
+        }
+        else {
+            pool[name].push(pt);
+        }
+    }
+
+    return pool;
+}
+
+function listPtIntoPoolPt(pool,list_pt) {
+    for(var i=0;i<list_pt.length;i++) {
+        var pt=list_pt[i];
+        var name=pt.m_name;
+        
+        if(pool[name]===undefined) {
+            pool[name]=[pt];
+        }
+        else if(!pool[name].includes(pt)) {
+            pool[name].push(pt);
+        }
+    }
+
+    return pool;
+}
+
+function poolPt2listPt(pool) {
+    var list_pt=[];
+    
+    for(var key in pool) {
+        list_pt=[...list_pt,...pool[key]];
+    }
+    
+    return list_pt;
+}
+
+var Nini=new StCore();
+
+
+/*
+act()
++[J函数](,JS版本)
+测试:...
++[新建阅读窗口](,测试)
+*/
+function print() {
+    if(document.getElementById("cmd_window").innerHTML===null) {
+        return;
+    }
+
+    document.getElementById("cmd_window").innerHTML+="<br>";
+    for (var i=0; i < arguments.length; i++) {
+        text=arguments[i];
+        document.getElementById("cmd_window").innerHTML+=" "+text;
+    }
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, 'cmd_window']);
+}
+
+function arrayRemove(arr,value) {
+    a=arr.filter(function(ele) {
+            return ele!=value;
+        }
+    );
+    return a;
+}
+</script>
+
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+
+/* Style the content */
+.content {
+  background-color: #fff;
+  padding: 10px;
+}
+
+/*
++[网页](web,实验室日历模板)
+*/
+
+/* Style the footer */
+.footer {
+  background-color: #333;
+  padding: 10px;
+  margin-top: 20px
+}
+
+.footer p {
+  color: #ddd
+}
+
+</style>
+
+
+  </head>
+
+
+<body>
+<div class="topnav">
+  <a href="#">Link</a>
+  <a href="#">Link</a>
+  <a href="#">Link</a>
+</div>
+
+
+<div class="content">
+    <p><mathjax style=\"font-size:1.5em\">
+<!--
++[H函数](,Nini聊天框)
+
+emoji::https://unicode.org/emoji/charts/full-emoji-list.html#1f92b
+
+-->
+
+<style>
+.window {
+  position: relative;
+  width: 90%;
+  #overflow: hidden;
+  overflow: auto;
+  # padding-top: 20%;
+  left: 5%;
+  border: 2px solid #888888;
+}
+
+.window.history {
+  height: 60%;
+  background-color: lightgrey;
+}
+
+.window.me {
+  background-color: white;
+}
+
+.chat-bubble {
+    margin: 10px;
+    display: inline-block;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+.chat-bubble.Nini {
+    float: left;
+    clear: both;
+    background-color: white;
+}
+
+.chat-bubble.me {
+    float: right;
+    clear: both;
+    background-color: lightgreen;
+}
+
+.talktext{
+    padding: 1em;
+    text-align: left;
+    line-height: 1.5em;
+}
+
+</style>
+
+<!--
++[H函数](,Nini聊天框)
+&#129409
+&#x1f611
+&#x1f612
+&#x1f623
+&#x1f603
+-->
+
+<h1 id='Nini_face'>Nini: &#x1f603</h1>
+
+<div id="chat_history" class="window history">
+
+<div class="chat-bubble Nini">
+    <div class="talktext">
+你好!
+    </div>
+</div>
+
+</div>
+
+<br>
+
+<textarea class="window me" id='edit_box' rows=4>
++A->+B->+C
+</textarea>
+
+<p id='cmd_window'></p>
+
+<script>
+
+var face_normal='&#x1f611';
+var face_see='&#x1f612';
+var face_bad='&#x1f623';
+var face_happy='&#x1f603';
+
+var pt_Nini=new NetP('Nini');
+window.open('www.google.com');
+
+edit_box.addEventListener("keydown", function (event) {
+    if(event.key==='Enter') {
+        var code=edit_box.value;
+        edit_box.value='';
+        event.preventDefault();
+        updateChatHistory(code);
+        runCode_Nini(code);
+    }
+});
+
+function updateChatHistory(code) {
+    chat_history.innerHTML+=`
+<div class="chat-bubble me">
+    <div class="talktext">
+${code}
+    </div>
+</div>
+`;
+
+chat_history.scrollTop = chat_history.scrollHeight;
+
+}
+
+function runCode_Nini(code) {
+    Nini.do(code,pt_Nini);
+    Nini_face.innerHTML=`Nini: ${face_see}`;
+}
+
+
+</script>
+
+
+<!--
++[H函数](,Nini聊天框)
+-->
+    </mathjax></p>
+</div>
+
+<div class="footer">
+  <p>Footer</p>
+</div>
+
+</body>
+</html>
