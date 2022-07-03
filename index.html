@@ -3,7 +3,6 @@
 
 LaTeX数学记号::https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
 +[打开](,LaTeX数学记号)
-+[保存文本](,保存网页)
 -->
 
 <html>
@@ -505,7 +504,7 @@ setRangers
                 }
                 return;
             }
-            
+            // [A]
             else if(this.isFunctionPoint()==2) {
                 if(this.m_map=='') {
                     point=new NetP(name,this.m_symbol.m_text);
@@ -793,10 +792,10 @@ newMap
                 if(this.stateSelf()!='blue') {
                     this.newMap(pool,areaType,list_new);
                 }
-                
                 else {
                     this.m_interp=false;
                 }
+
                 change=true;
                 if(this.stateRelation()==false) {
                     continue;
@@ -1312,6 +1311,7 @@ readSubCode_tokener
 buildPoints_tokener
 removeComment
 catch
+oneStep
 */
 
 
@@ -1453,7 +1453,7 @@ class NetPStack {
         Object.assign(copy0,this.m_builtStack[this.m_builtStack.length-1]);
         this.m_builtStack.push(copy0);
 
-        Object.assign(this.m_undefinedStack[this.m_undefinedStack.length-1],copy1);
+        Object.assign(copy1,this.m_undefinedStack[this.m_undefinedStack.length-1]);
         this.m_undefinedStack.push(copy1);
     }
 
@@ -1859,10 +1859,14 @@ buildNetP
                 }
             }
         }
+//print(pointStack.info());
         pointStack.leaveClause();
         return [code,karma,pointStack];
     }
 
+/*
+leaveClause
+*/
 
     splitToken(code,karma,pointStack) {
         var typeCon,effect;
@@ -2126,7 +2130,7 @@ function run_code(code0,list_pt) {
 
 
 /*
-chain
+readSubCode
 +[J函数](,JS版本)
 测试stdCode:...
 测试Parser:...
@@ -2136,10 +2140,10 @@ chain
 */
 /*
 +[J函数](,JS版本)
-do
+[m_name]
 obj.print
 +[新建阅读窗口](,测试)
-op
+[JS]
 */
 
 function listFromPt(pt) {
@@ -2170,14 +2174,23 @@ class StCore {
     }
 
 /*
+[增加内容]
 +[J函数](,测试)
 */
 
     init(code) {
         var list_pt0=this.make(code),list_pt=[];
 
-        this.m_self=list_pt0[0];
-        this.m_self.m_permission=0;
+        for(var i in list_pt0) {
+            var pt=list_pt0[i];
+            if(pt.m_name==='Nini') {
+                this.m_self=pt;
+                pt.m_permission=0;
+            }
+        }
+        //this.m_self=list_pt0[0];
+        //this.m_self.m_permission=0;
+
         list_pt=listFromPt(this.m_self);
 
         for(var i in list_pt) {
@@ -2202,12 +2215,12 @@ class StCore {
 
         if(this.m_hear=='') {
             this.m_hear=new NetP('听');
-            new NetP.con(this.m_self,this.m_hear);
+            new NetP('的').con(this.m_self,this.m_hear);
             this.m_hear.m_permission=0;
         }
         if(this.m_speak=='') {
             this.m_speak=new NetP('说');
-            new NetP.con(this.m_self,this.m_speak);
+            new NetP('的').con(this.m_self,this.m_speak);
             this.m_speak.m_permission=0;
         }
 
@@ -2250,6 +2263,7 @@ class StCore {
 
 /*
 保存run_code_line:...
+think
 */
 
     run_code_line(km,list_pt,list_ns) {
@@ -2316,6 +2330,7 @@ class StCore {
         var parser=this.m_parser;
 
         list_km=parser.readSubCode_tokener(code1);
+//print(writeStdCode_karma(list_km[0],[]));
     
         list_km[0].m_listMP=[pt];
         list_km[0].m_restricted=true;
@@ -2327,8 +2342,14 @@ class StCore {
         return result;
     }
 
+    reorder_ops(list_pt) {
+        list_pt.sort(function(a,b){return b.m_time-a.m_time;});
+    }
+
     operation(list_pt) {
+//printPtList(list_pt);
         var list_del=[];
+        this.reorder_ops(list_pt);
         for(var i=list_pt.length-1;i>=0;i--) {
             var pt=list_pt[i];
             var operated=false;
@@ -2359,6 +2380,10 @@ class StCore {
                 this.opAddToText(sbj,obj,pt);
                 operated=true;
             }
+            else if(pt.m_name=='[标题]') {
+                this.opName(sbj,pt);
+                operated=true;
+            }
             else if(pt.m_name=='[模板文本]') {
                 this.opTempText(sbj,obj,pt);
                 operated=true;
@@ -2370,6 +2395,10 @@ class StCore {
             }
             else if(pt.m_name=='[JS]') {
                 this.opJs(obj,pt);
+                operated=true;
+            }
+
+            else if(pt.m_name=='[临时文本]') {
                 operated=true;
             }
 
@@ -2408,6 +2437,10 @@ class StCore {
         alert(`${name}: ${text}`);
     }
 
+/*
+replace
+*/
+
     opDo(action) {
         var con_de='';
         for(var i in action.m_con) {
@@ -2419,15 +2452,21 @@ class StCore {
             }
         }
         
-        action.m_name='['+con_de.m_name+']';
-        this.act(con_de,action);
+        if(con_de!=='') {
+            action.m_name='['+con_de.m_name+']';
+            this.act(con_de,action);
+        }
     }
+
+/*
++[新建阅读窗口](,测试)
+*/
 
     opJs(obj,action) {
         var code=action.m_text;
         var var_name='';
         var code_out=`\nvar outs_in_JS={`;
-        var outs,outs_var={};
+        var outs,outs_var={},outs_var_v={};
         
         for(var i in action.m_con) {
             var pt=action.m_con[i];
@@ -2470,6 +2509,19 @@ class StCore {
                     outs_var[var_name]=pt.m_db[1];
                 }
             }
+            else if(pt.m_name=='v' | pt.m_name=='[v]') {
+                if(pt.m_db[1]!='' & pt.m_db[1]!=action) {
+                    if(pt.m_text!='') {
+                        var_name=pt.m_text;
+                    }
+                    else {
+                        var_name=pt.m_db[1].m_name;
+                    }
+                    window[var_name]=pt.m_db[1].m_var;
+                    outs_var_v[var_name]=pt.m_db[1];
+                }
+            }
+
         }
         code_out+='};outs_in_JS';
 
@@ -2478,6 +2530,9 @@ class StCore {
             outs=eval(code+code_out);
             for(var key in outs) {
                 outs_var[key].m_text=outs[key];
+            }
+            for(var key in outs_var_v) {
+                outs_var_v[key].m_var=window[key];
             }
         } catch(e) {
             print(e);
@@ -2494,19 +2549,18 @@ class StCore {
         }
         
         var text='',con='';
-        if(sbj=='' & action.m_text=='') {
+        if(sbj=='' & action.m_text==='') {
             return;
         }
-        else if(action.m_text=='') {
+        else if(action.m_text==='') {
             text=sbj.m_text;
         }
-        else if(sbj=='') {
+        else if(sbj==='') {
             text=action.m_text;
         }
         else {
-            pat=action.m_text;
             con=sbj.m_text;
-            text=pat+con;
+            text=action.m_text+con;
         }
         obj.m_text=text;
     }
@@ -2530,11 +2584,17 @@ class StCore {
             text=action.m_text;
         }
         else {
-            pat=action.m_text;
             con=sbj.m_text;
-            text=pat+con;
+            text=action.m_text+con;
         }
         obj.m_text+=text;
+    }
+
+    opName(sbj,action) {
+        if(sbj==='') {
+            return
+        }
+        action.m_text=sbj.m_name;
     }
 
     opTempText(sbj,obj,action) {
@@ -2635,13 +2695,20 @@ class StCore {
         var code1=pt_A.m_text;
         var list_km=[],list_new=[],result=false;
         var parser=this.m_parser;
-    
+
         list_km=parser.readSubCode_tokener(code1);
     
         list_km[0].m_listMP=[pt_Q];
         list_km[0].m_restricted=true;
-    
-        result=this.run_code_line(list_km[0],[pt_A],list_new);
+        this.run_code_line(list_km[0],[pt_A],list_new);
+
+        if(list_km[0].m_reState==='dark green') {
+            result=true;
+        }
+        else {
+            result=false;
+        }
+
         return result;
     }
     
@@ -2651,7 +2718,10 @@ class StCore {
         obj=question.m_db[1];
         
         if(question.m_name=='[m_name]') {
-            return this.answerQuestion(question);
+            return this.tpName(sbj,obj,question);
+        }
+        else if(question.m_name=='[m_text]') {
+            return this.tpText(sbj,obj,question);
         }
         else if(question.m_name=='[==]') {
             return this.tpEqual(sbj,obj,question);
@@ -2660,17 +2730,57 @@ class StCore {
         return false;
     }
     
-    tpEqual(sbj,obj,question) {
-        if(obj=='') {
+    tpName(sbj,obj,question) {
+        if(question.m_db[0]==='' | question.m_db[1]==='') {
             return false;
         }
-        if(sbj=='') {
-            if(obj.m_text==question.m_text) {
+        var name=question.m_db[0].m_name;
+    
+        if(name[0]==='[' & name[name.length-1]===']') {
+            name=name.slice(1,name.length-1);
+        }
+        if(name==='') {
+            print('Error! Name can\'t be empty');
+            return false;
+        }
+    
+        if(question.m_db[1].m_building==true) {
+            question.m_db[1].m_name=name;
+        }
+        else {
+            print("Error! [m_name] can only set a new point's m_name.",question.m_db[1].info(),"isn't a new point.");
+        }
+        this.answerQuestion(question)
+        return true
+    }
+    
+    tpText(sbj,obj,question) {
+        if(question.m_db[0]==='' | question.m_db[1]==='') {
+            return false;
+        }
+        var text=question.m_db[0].m_text;
+    
+        if(question.m_db[1].m_building==true) {
+            question.m_db[1].m_text=text;
+        }
+        else {
+            print("Error! [m_text] can only set a new point's m_text.",question.m_db[1].info(),"isn't a new point.");
+        }
+        this.answerQuestion(question)
+        return true
+    }
+
+    tpEqual(sbj,obj,question) {
+        if(obj==='') {
+            return false;
+        }
+        if(sbj==='') {
+            if(obj.m_text===question.m_text) {
                 this.answerQuestion(question);
                 return true;
             }
         }
-        else if(obj.m_text==sbj.m_text) {
+        else if(obj.m_text===sbj.m_text) {
             this.answerQuestion(question);
             return true;
         }
@@ -2739,10 +2849,12 @@ var Nini=new StCore();
 
 
 /*
-act()
+sort
 +[J函数](,JS版本)
 测试:...
+测试页面:...
 +[新建阅读窗口](,测试)
++[新建阅读窗口](,测试页面)
 */
 /*
 +[J函数](,JS版本)
@@ -2756,6 +2868,9 @@ function arrayRemove(arr,value) {
     return a;
 }
 
+
+var global_counter=0;
+
 class NetP {
     constructor(name,text='') {
         this.m_master='';
@@ -2763,6 +2878,8 @@ class NetP {
         this.m_creator='';
         this.m_dev='';
         this.m_var='';
+        this.m_time=global_counter;
+        global_counter+=1;
 
         this.m_permission=4;
 
@@ -2886,7 +3003,7 @@ class NL_Parser {
         this.m_dict_名词=['标记区域', '立方体', '波前', '波长', '圆柱体', '区域', '采样点', '截面分布', '参考面', '来源', '标记点', '类', '位置', '参数', 'Z方向', '成像示意图', '场强', '可见光', '函数', '方向', '衍射环', 'IP图像', 'X方向', '三维箭头', '二维函数', '光标', '变量', '平面', '红外线', '相位', '光强', '长度', 'Y坐标', '网格', '像', '多边形', '球体', '透镜组', '能谱', '倍率', '光栅压缩器', '反演', '光束传播图', '坐标', '顺序', '像距', '线段', 'X坐标', '范围', 'Javascript', '物', '光谱', '波包', '相机', '发射角分布', 'FROG', '圆形', '屏幕', 'Y方向', '程序流程图', '长方形'];
 
         this.m_dict_动词=['有', '玩耍', '替换', '相距', '到达', '离开', '挑衅', '获取', '进入', '复制', '拍摄', '查看', '准备', '添加', '到', '移动', '使用', '奔跑', '引用', '在', '反射', '裁剪', '转换', '吃', '修改', '为', '截取', '计算', '放映', '解析', '调换', '是', '清空', '旋转', '捕捉', '击败', '优化', '更新', '背向', '朝向', '显示', '分析', '跑', '结束', '距离'];
-        this.m_dict_形容词=['所有', '什么样', '聪明', '勇敢', '单纯', '什么', '善良', '正义', '全部', '美丽', '天真'];
+        this.m_dict_形容词=['所有', '什么样', '聪明', '勇敢', '单纯', '善良', '正义', '全部', '美丽', '天真'];
 
         this.m_dict_副词=['下', '右', '上', '都', '左', '中'];
         this.m_dict_数量词=['只', '号', '辆', '个'];
@@ -4354,28 +4471,850 @@ Nini#0""(,)
 m_lib#1"
 
 自我意识:...
+更新意境:...
+
 
 "(,)
-m_idea#2""(,)
+m_idea#2"
+
+词语:...
+
+"(,)
 的#3""(Nini#0,m_idea#2)
 的#4""(Nini#0,m_lib#1)
-说#5""(,)
-听#6""(,)
-的#7""(Nini#0,说#5)
-的#8""(Nini#0,听#6)
-自我意识#9"\"\"\"
+听#5""(,)
+说#6""(,)
+的#7""(Nini#0,说#6)
+的#8""(Nini#0,听#5)
+词典#9"
+
+名词:...
+
+
+
+
+"(,)
+的#10""(Nini#0,词典#9)
+名词#11"Nini, 打开词典的条目(节点)
+Nini, 打开词典的句子库(节点)
+
+线段:...
+圆形:...
+长方形:...
++[粘贴](,名词)
+
+
+"(,)
+的#12""(词典#9,名词#11)
+长方形#13"
+
+定义:...
+定义的\"圆形\"替换为\"长方形\"
+定义的\"matlab\"替换为\"JS\"
+
+
+"(,)
+的#14""(名词#11,长方形#13)
+圆形#15"
+定义:...
+定义的\"线段\"替换为\"圆形\"
+定义的\"matlab\"替换为\"JS\"
+
+
+"(,)
+的#16""(名词#11,圆形#15)
+线段#17"
+定义:...
+
+
+"(,)
+的#18""(名词#11,线段#17)
+定义#19"\"\"\"
+[eq](+[定义],定义)
+JS代码:...
+JS代码的\"rect\"替换为\"line\"
+
+\"\"\"
+
++定义(_线段,线段)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_线段,类型)->类型->+[修改内容]\"线段\"(,类型),
+        ->+的(_线段,+类型)->+类型\"线段\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_line\"(+[JS],_线段)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](线段,+[临时文本])...
+->[]{
+    []:->的(_线段,起点)->起点->+[o]\"pt0\"(+[JS],起点),
+        ->+的(_线段,+起点)->+起点\"0,0\"->+[o]\"pt0\"(+[JS],+起点)
+}...
+->[]{
+    []:->的(_线段,终点)->终点->+[o]\"pt1\"(+[JS],终点),
+        ->+的(_线段,+终点)->+终点\"1,1\"->+[o]\"pt1\"(+[JS],+终点)
+}
+
+
+
+
+
+
+
+
+"(,)
+的#20""(线段#17,定义#19)
+JS代码#21"
+var siz=[%siz];
+var pt0=[%pt0],pt1=[%pt1];
+
+if(siz.length>1) {
+    pt0=[siz[0],siz[1]];
+}
+if(siz.length>3) {
+    pt1=[siz[2],siz[3]];
+}
+
+
+if(var_line==='') {
+    var_line=document.createElementNS(\"http://www.w3.org/2000/svg\",'line');
+    var_line.setAttribute('x1',pt0[0]);
+    var_line.setAttribute('y1',pt0[1]);
+    var_line.setAttribute('x2',pt1[0]);
+    var_line.setAttribute('y2',pt1[1]);
+    var_line.setAttribute('stroke','#000000');
+    display_window.appendChild(var_line);
+} else {
+    var_line.setAttribute('x1',pt0[0]);
+    var_line.setAttribute('y1',pt0[1]);
+    var_line.setAttribute('x2',pt1[0]);
+    var_line.setAttribute('y2',pt1[1]);
+}
+"(,)
+的#22""(定义#19,JS代码#21)
+定义#23"\"\"\"
+JS代码:...
+JS代码的\"rect\"替换为\"circle\"
+
+\"\"\"
+
++定义(_圆形,圆形)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_圆形,类型)->类型->+[修改内容]\"圆形\"(,类型),
+        ->+的(_圆形,+类型)->+类型\"圆形\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_circle\"(+[JS],_圆形)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](圆形,+[临时文本])...
+->[]{
+    []:->的(_圆形,半径)->半径->+[o]\"R\"(+[JS],半径),
+        ->+的(_圆形,+半径)->+半径->+[o]\"R\"(+[JS],+半径)
+}...
+->[]{
+    []:->在(_圆形,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_圆形,+空间点)->+空间点\"0,0\"->+[o]\"pt\"(+[JS],+空间点)
+}
+
+
+"(,)
+的#24""(圆形#15,定义#23)
+JS代码#25"/*
+
+*/
+
+var R='%R';
+var siz=[%siz],pt=[%pt];
+
+if(siz[0]!==undefined) {
+    R=siz[0];
+}
+if(pt.length<2) {
+    pt=[0,0];
+}
+
+if(var_circle==='') {
+    var_circle=document.createElementNS(\"http://www.w3.org/2000/svg\",'circle');
+    var_circle.setAttribute('r',R);
+    var_circle.setAttribute('cx',pt[0]);
+    var_circle.setAttribute('cy',pt[1]);
+    var_circle.setAttribute('fill','#ffffff');
+    var_circle.setAttribute('stroke','#000000');
+    display_window.appendChild(var_circle);
+} else {
+    var_circle.setAttribute('r',R);
+    var_circle.setAttribute('cx',pt[0]);
+    var_circle.setAttribute('cy',pt[1]);
+}
+
+"(,)
+的#26""(定义#23,JS代码#25)
+定义#27"\"\"\"
+[eq](+[定义],定义)
+JS代码:...
++[新建阅读窗口](,JS代码)
+
+\"\"\"
+
++定义(_长方形,长方形)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_长方形,类型)->类型->+[修改内容]\"长方形\"(,类型),
+        ->+的(_长方形,+类型)->+类型\"长方形\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_rect\"(+[JS],_长方形)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](长方形,+[临时文本])...
+->[]{
+    []:->的(_长方形,长度)->长度->+[o]\"L\"(+[JS],长度),
+        ->+的(_长方形,+长度)->+长度\"1\"->+[o]\"L\"(+[JS],+长度)
+}...
+->[]{
+    []:->的(_长方形,宽度)->宽度->+[o]\"W\"(+[JS],宽度),
+        ->+的(_长方形,+宽度)->+宽度\"1\"->+[o]\"W\"(+[JS],+宽度)
+}...
+->[]{
+    []:->在(_长方形,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_长方形,+空间点)->+空间点\"0,0\"->+[o]\"pt\"(+[JS],+空间点)
+}
+
+
+"(,)
+的#28""(长方形#13,定义#27)
+JS代码#29"
+var siz=[%siz],pt=[%pt];
+var W='%W';
+var L='%L';
+
+if(siz[0]!==undefined) {
+    W=siz[0];
+}
+if(siz[1]!==undefined) {
+    L=siz[1];
+}
+if(pt.length<2) {
+    pt=[0,0];
+}
+
+if(var_rect==='') {
+    var_rect=document.createElementNS(\"http://www.w3.org/2000/svg\",'rect');
+    var_rect.setAttribute('width',W);
+    var_rect.setAttribute('height',L);
+    var_rect.setAttribute('x',pt[0]);
+    var_rect.setAttribute('y',pt[1]);
+    var_rect.setAttribute('fill','#ffffff');
+    var_rect.setAttribute('stroke','#000000');
+    display_window.appendChild(var_rect);
+} else {
+    var_rect.setAttribute('width',W);
+    var_rect.setAttribute('height',L);
+    var_rect.setAttribute('x',pt[0]);
+    var_rect.setAttribute('y',pt[1]);
+}
+"(,)
+的#30""(定义#27,JS代码#29)
+词语#31"\"\"\"
+Nini, 打开句子结构的结构场景(节点)
+
+\"\"\"
+
++词语(_世界,_名词)->的(_世界,_实体):
+    ->_A(_名词,)->名词(,_A)->[eq](_实体,_A)...
+        ->的(_实体,_性质)->[eq](_性质,_名词)->+是(+词语,_性质),
+    
+    ->[eq](_实体,_名词)->+是(+词语,_实体)
+
+
+
+"(,)
+的#32""(m_idea#2,词语#31)
+自我意识#33"\"\"\"
+库:...
++[新建阅读窗口](,库)
+
+保存:...
 
 \"\"\"
 
 +自我意识(Nini,)->+[del](,+自我意识)...
+->的(自我意识,库)...
 
 ->的(Nini,听)->的(Nini,说):
-    ->[==]\"你好\"(,听)->+[修改内容]\"哈哈哈! 我好开心! \"(,说),
-    ->[==]\"你不好\"(,听)->+[修改内容]\"我生气了! \"(,说),
-    ->^起点(听,)->+[修改内容]\"我懂你在说什么\"(,说),
+    ->询问(Nini,)->的(库,问题)->+[做](,询问)->+[code](+[做],问题),
+    ->[==]\"你好\"(,听)->的(库,你好)->你好->+[做](Nini,)->+[code](+[做],你好),
+    ->^起点(听,_句子)->的(_句子,谓语)->谓语(,_动词)...
+        ->的(库,操作)->操作(,)...
+        ->+[做](Nini,_动词)->+[code](+[做],操作),
+    ->+[修改内容]\"我不懂\"(,说)
+
+
+"(,)
+的#34""(m_lib#1,自我意识#33)
+更新意境#35"\"\"\"
+
+
+\"\"\"
+
++更新意境(Nini,)->+[del](,+更新意境)...
+
+->的(Nini,世界)->的(Nini,词典)->的(词典,名词)...
+->[]{
+    []=>的(世界,_意象)->_意象->的(_意象,类型)=>[]:
+        ->[==]\"长方形\"(,类型)->的(名词,长方形)->长方形->的(长方形,定义#0)...
+            ->+[做](_意象,+长方形)->+[code](+[做],定义#0)->+长方形->+[del](,+长方形),
+
+        ->[==]\"圆形\"(,类型)->的(名词,圆形)->圆形->的(圆形,定义#1)...
+            ->+[做](_意象,+圆形)->+[code](+[做],定义#1)->+圆形->+[del](,+圆形),
+
+        ->[==]\"线段\"(,类型)->的(名词,线段)->线段->的(线段,定义#2)...
+            ->+[做](_意象,+线段)->+[code](+[做],定义#2)->+线段->+[del](,+线段)
+}
+
+
+"(,)
+的#36""(m_lib#1,更新意境#35)
+库#37"
+你好:...
+问题:...
+
+操作:...
+
+
+
+"(,)
+的#38""(自我意识#33,库#37)
+保存#39"\"\"\"
+库:...
++[新建阅读窗口](,库)
+
+保存:...
+
+\"\"\"
+
++自我意识(Nini,)->+[del](,+自我意识)...
+->的(自我意识,库)...
+->[]{
+    +[消息窗口](,+B)
+}...
+
+->的(Nini,听)->的(Nini,说):
+    ->询问(Nini,)->的(库,问题)->+[做](,询问)->+[code](+[做],问题),
+    ->[==]\"你好\"(,听)->的(库,你好)->你好->+[做](Nini,)->+[code](+[做],你好),
+    ->^起点(听,_句子)->的(_句子,谓语)->谓语(,_动词)...
+        ->的(库,操作)->操作(,)...
+        ->+[做](Nini,_动词)->+[code](+[做],操作),
     ->+[修改内容]\"我不懂\"(,说)
 "(,)
-的#10""(m_lib#1,自我意识#9)
+的#40""(自我意识#33,保存#39)
+你好#41"\"\"\"
+保存:...
+
+\"\"\"
+
++你好(Nini,)->+[del](,+你好)...
+
+->的(Nini,说):
+    ->的(Nini,聊天者)->[]{
+        []:->询问(Nini,聊天者)->+[修改内容]\"别再你好了, 问你叫什么呢\"(,说),
+
+        ->[==](,聊天者)->+询问(Nini,聊天者)...
+            ->+[修改内容]\"我还不知道你的名字呢\"(,说),
+
+        ->+[模板文本]\"%聊天者, 你好!\"(,说)->+[.](+[模板文本],聊天者)
+    },
+    ->+[修改内容]\"要做些什么呢?\"(,说)->+的(Nini,+聊天者)
+"(,)
+的#42""(库#37,你好#41)
+问题#43"\"\"\"
+
+
+\"\"\"
+
++问题(,询问)->+[del](,+问题)...
+->的(库,问题)->库->的(库,你好)...
+
+->询问(Nini,_内容)->Nini->的(Nini,听)->的(Nini,说)->_内容:
+    ->[is](_内容,聊天者)->[]{
+        []:->^起点(听,句子)...
+            ->句子->的(句子,谓语)->谓语(,是)->是(我,_名字)->我->_名字(,)...
+            ->+[标题](_名字,)->+[修改内容](+[标题],聊天者)...
+            ->+[左连](询问,)->+[做](Nini,)->+[code](+[做],你好),
+        ->+[修改内容](听,聊天者)...
+            ->+[左连](询问,)->+[做](Nini,)->+[code](+[做],你好)
+    }
+
+
+"(,)
+的#44""(库#37,问题#43)
+操作#45"\"\"\"
+库:...
+
+\"\"\"
+
++操作(Nini,_动作)->+[del](,+操作)...
+->的(操作,库)...
+
+->[]{
+    []:->的(Nini,世界)->世界,->+的(Nini,+世界)
+}...
+
+->的(Nini,说)->说:
+    ->的(库,_动词)->[eq](_动作,_动词)->+[做](Nini,_动作)->+[code](+[做],_动词),
+    ->+[修改内容]\"我不懂这个\"(,说)
+
+
+
+
+"(,)
+的#46""(库#37,操作#45)
+库#47"记住\"自然语言\"
+
+显示:...
+是:...
+有:...
+在:...
+距离:...
+距离的\"在\"替换为\"距离\"
+
++[新建阅读窗口](,是)
+"(,)
+的#48""(操作#45,库#47)
+显示#49"\"\"\"
+Nini, 打开花园(文件)
+
+\"\"\"
+
++显示(Nini,显示)->+[del](,+显示)...
+
+->的(Nini,世界)->的(Nini,说)...
+->显示(,_名词)->_名词:
+    ->[词语](世界,_名词)->是([词语],_宾语)...
+    ->_宾语(,_A1)->+[标题]#0(_宾语,)->[]{
+        []:->_A1->+[标题]#1(_A1,)...
+            ->+[模板文本]\"%名词0是%名词1\"(,说)...
+            ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],+[标题]#1),
+        ->+[修改内容](_宾语,说)
+    },
+
+    ->+[标题](_名词,)->+[模板文本]\"%名词是什么?\"(,说)->+[.]\"名词\"(+[模板文本],+[标题])
+
+
+
+"(,)
+的#50""(库#47,显示#49)
+是#51"\"\"\"
+库:...
++[新建阅读窗口](,库)
+
+\"\"\"
+
++是(Nini,是)->+[del](,+是)...
+->的(是#0,库)...
+
+->的(Nini,世界)->的(Nini,说)...
+->的(Nini,词典)->的(词典,名词#0)...
+
+->是(_名词,_名词2)->_名词->[]{
+    []:->[词语](世界,_名词),
+    ->_A(_名词,)->名词(,_A)->+[做](Nini,_A)->+[code](+[做],没有性质)...
+        ->的(库,没有性质)->没有性质,
+    ->+的(世界,+实体)->[m_name](_名词,+实体)
+}...
+->[词语](世界,_名词)->是([词语],_主语)...
+
+->_名词2:
+    ->[is](_名词2,什么)->的(库,回答什么)->回答什么(,)...
+        ->+[做](Nini,_主语)->+[code](+[做],回答什么),
+    ->的(名词#0,_条目)->[eq](_名词2,_条目)->的(_条目,定义)...
+        ->+[做](_主语,_名词2)->+[code](+[做],定义),
+    ->[is](_名词2,临时文本)->+[修改内容](临时文本,_主语),
+    ->[]{
+        []:->[词语](世界,_名词2)->是([词语],_宾语)->+[右连](_主语,_宾语),
+        ->+[标题](_名词2,)...
+            ->+[模板文本]\"%名词是什么?\"(,说)->+[.]\"名词\"(+[模板文本],+[标题])
+    }
+
+"(,)
+的#52""(库#47,是#51)
+有#53"\"\"\"
+库:...
++[新建阅读窗口](,库)
+
+\"\"\"
+
++有(Nini,有)->+[del](,+有)...
+->的(有#0,库)...
+->的(Nini,世界)->的(Nini,说)...
+
+->有(_名词,_名词2)->_名词2:
+->[is](_名词2,什么)->+[做](Nini,有)->+[code](+[做],回答有什么)...
+    ->的(库,回答有什么)->回答有什么,
+
+->_名词->[]{
+    []:->[词语](世界,_名词)->是([词语],_主语)...
+        ->+[做]#1(_主语,_名词2)->+[code](+[做]#1,操作0)...
+        ->+说话(+[做]#1,说)->+[del](,+说话)...
+        ->的(库,操作0)->操作0,
+    ->+[标题](_名词,)->+[模板文本]\"%名词是什么?\"(,说)->+[.]\"名词\"(+[模板文本],+[标题])
+},
+
+
+->+[做](世界,_名词2)->+[code](+[做],操作0)...
+    ->+说话(+[做],说)->+[del](,+说话)...
+    ->的(库,操作0)->操作0
+
+
+"(,)
+的#54""(库#47,有#53)
+在#55"\"\"\"
+回答模板::%名词是什么?
+库:...
++[新建阅读窗口](,库)
+保存:...
+
+\"\"\"
+
++在(Nini,在)->+[del](,+在)...
+->的(在#0,回答模板)->的(在#0,库)...
+
+->的(Nini,世界)->的(Nini,说)...
+
+->在(_名词,_名词1)->_名词->[]{
+    []:->[词语](世界,_名词),
+    ->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+}->[词语](世界,_名词)->是([词语],_主语)...
+
+->[]{
+    []:->在(_主语,空间点)->空间点,->+在(_主语,+空间点)->+空间点\"0,0\"
+}->在(_主语,空间点)...
+
+->_名词1:
+    ->[is](_名词1,临时文本)->临时文本->+[修改内容](临时文本,空间点),
+    ->[is](_名词1,位置)->+[做](_主语,位置)->+[code](+[做],在位置)...
+        ->+说话(+[做],说)->+[del](,+说话)...
+        ->+范围(+[做],世界)->+[del](,+范围)...
+        ->的(库,在位置)->在位置
+
+
+
+
+"(,)
+的#56""(库#47,在#55)
+距离#57"\"\"\"
+回答模板::%名词是什么?
+库:...
++[新建阅读窗口](,库)
+
+\"\"\"
+
++距离(Nini,距离)->+[del](,+距离)...
+->的(距离#0,回答模板)->的(距离#0,库)...
+
+->的(Nini,世界)->的(Nini,说)...
+
+->距离(_名词,_名词1)->_名词->[]{
+    []:->[词语](世界,_名词),
+    ->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+}->[词语](世界,_名词)->是([词语],_主语)...
+
+->[]{
+    []:->在(_主语,空间点)->空间点,->+在(_主语,+空间点)->+空间点\"0,0\"
+}->在(_主语,空间点)...
+
+->_名词1:
+    ->+[做](_主语,距离)->+[code](+[做],操作)...
+        ->+说话(+[做],说)->+[del](,+说话)->+范围(+[做],世界)->+[del](,+范围)...
+        ->的(库,操作)->操作
+
+
+
+
+"(,)
+的#58""(库#47,距离#57)
+回答模板#59"%名词是什么?"(,)
+的#60""(距离#57,回答模板#59)
+库#61"
+操作:...
+
+
+
+
+"(,)
+的#62""(距离#57,库#61)
+操作#63"\"\"\"
+回答模板::%名词是什么?
+回答模板2::我不知道%名词在哪里
+库:...
+JS代码:...
+
+\"\"\"
+
++操作(_主语,距离)->+[del](,+操作)...
+->的(操作,JS代码)->的(操作,回答模板)->的(操作,回答模板2)...
+
+->说话(+操作,说)->范围(+操作,世界)...
+
+->距离(,_名词)->为(距离,_名词2)->[]:
+->[词语](世界,_名词)->是([词语],_宾语)...
+    ->在(_主语,空间点)->[]{
+        []:->在(_宾语,空间点#1)->+[JS](,空间点)->+[code](+[JS],JS代码)...
+            ->+[.]\"pt\"(+[JS],空间点#1)->+[.]\"dr\"(+[JS],_名词2),
+
+        ->+[标题]#0(_名词,)->+[模板文本](回答模板2,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+    },
+
+->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+
+
+
+
+
+"(,)
+的#64""(库#61,操作#63)
+回答模板#65"%名词是什么?"(,)
+的#66""(操作#63,回答模板#65)
+回答模板2#67"我不知道%名词在哪里"(,)
+的#68""(操作#63,回答模板2#67)
+库#69""(,)
+的#70""(操作#63,库#69)
+JS代码#71"/*
+
+*/
+
+var dr=[%dr],pt=[%pt];
+var ans;
+
+ans=[pt[0]+dr[0],pt[1]+dr[1]];
+
+"(,)
+的#72""(操作#63,JS代码#71)
+回答模板#73"%名词是什么?"(,)
+的#74""(在#55,回答模板#73)
+保存#75"\"\"\"
+回答模板::%名词是什么?
+
+保存:...
+
+\"\"\"
+
++在(Nini,在)->+[del](,+在)...
+->的(在#0,回答模板)...
+
+->的(Nini,世界)->的(Nini,说)...
+
+->在(_名词,_名词1)->_名词->+[标题]#0(_名词,)->[]{
+    []:->[词语](世界,_名词),
+    ->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+}->[词语](世界,_名词)->是([词语],_主语)...
+
+->[]{
+    []:->在(_主语,空间点)->空间点,->+在(_主语,+空间点)->+空间点\"0,0\"
+}->在(_主语,空间点)...
+
+->_名词2:
+    ->[is](_名词2,临时文本)->临时文本->+[修改内容](临时文本,空间点)
+
+
+
+"(,)
+的#76""(在#55,保存#75)
+库#77"
+
+在位置:...
+
+
+"(,)
+的#78""(在#55,库#77)
+在位置#79"\"\"\"
+回答模板::%名词是什么?
+回答模板2::我不知道%名词在哪里
+
+\"\"\"
+
++在位置(_主语,位置)->+[del](,+在位置)...
+->的(在位置,回答模板)->的(在位置,回答模板2)...
+
+->说话(+在位置,说)->范围(+在位置,世界)...
+
+->_名词(位置,)->[]:
+->[词语](世界,_名词)->是([词语],_宾语)...
+    ->在(_主语,空间点)->[]{
+        []:->在(_宾语,空间点#1)->+[修改内容](空间点#1,空间点),
+        ->+[标题]#0(_名词,)->+[模板文本](回答模板2,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+    },
+
+->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+
+
+
+
+
+"(,)
+的#80""(库#77,在位置#79)
+回答模板2#81"我不知道%名词在哪里"(,)
+的#82""(在位置#79,回答模板2#81)
+回答模板#83"%名词是什么?"(,)
+的#84""(在位置#79,回答模板#83)
+库#85"
+
+回答有什么:...
+操作0:...
+
+
+"(,)
+的#86""(有#53,库#85)
+回答有什么#87"\"\"\"
+回答模板::%主语有%内容
+回答模板2::%主语没有任何东西
+
+\"\"\"
+
++回答有什么(Nini,有)->+[del](,+回答有什么)...
+->的(回答有什么,回答模板)->的(回答有什么,回答模板2)...
+->的(Nini,世界)->的(Nini,说)...
+
+->有(_名词,)...
+->+[临时文本]#0->+[临时文本]#1(,)...
+->[]{
+    []:->_名词->+[标题]#0(_名词,)->[]{
+        []:->[词语](世界,_名词)->是([词语],_主语)...
+            ->+[修改内容](+[标题]#0,+[临时文本]#0)...
+        =>的(_主语,_内容)->_内容(,)...
+            =>+[标题](_内容,)->+[增加内容]\" \"(+[标题],+[临时文本]#1)...
+            ->+有内容(+回答有什么,)->+[del](,+有内容),
+
+        ->+已回答(+回答有什么,)->+[del](,+已回答)...
+            ->+[模板文本]\"%名词是什么?\"(,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+    },
+    
+    ->+[修改内容]\"我的世界里\"(,+[临时文本]#0)...
+    =>的(世界,_内容)->_内容=>+[标题](_内容,)->+[增加内容]\" \"(+[标题],+[临时文本]#1)...
+        ->+有内容(+回答有什么,)->+[del](,+有内容)
+}...
+
+->[]:->已回答(+回答有什么,),
+
+    ->有内容(+回答有什么,)->+[模板文本](回答模板,说)...
+        ->+[.]\"主语\"(+[模板文本],+[临时文本]#0)->+[.]\"内容\"(+[模板文本],+[临时文本]#1),
+
+    ->+[模板文本](回答模板2,说)...
+        ->+[.]\"主语\"(+[模板文本],+[临时文本]#0)->+[.]\"内容\"(+[模板文本],+[临时文本]#1)
+
+
+"(,)
+的#88""(库#85,回答有什么#87)
+操作0#89"\"\"\"
+回答模板::%主语中已经有%宾语了. 咱暂时不能理解为什么不同的东西会有同样的名字
+
+\"\"\"
+
++操作0(_主语,_名词)->+[del](,+操作0)...
+->的(操作0,回答模板)...
+
+->说话(+操作0,说)...
+->[]:
+    ->[词语](_主语,_名词)->是([词语],_宾语)...
+        ->+[标题]#0(_主语,)->+[标题]#1(_宾语,)...
+    ->+[模板文本](回答模板,说)->+[消息窗口](,_主语)...
+        ->+[.]\"主语\"(+[模板文本],+[标题]#0)->+[.]\"宾语\"(+[模板文本],+[标题]#1),
+    ->+的(_主语,+性质)->[m_name](_名词,+性质)
+"(,)
+的#90""(库#85,操作0#89)
+回答模板#91"%主语中已经有%宾语了. 咱暂时不能理解为什么不同的东西会有同样的名字"(,)
+的#92""(操作0#89,回答模板#91)
+回答模板#93"%主语有%内容"(,)
+的#94""(回答有什么#87,回答模板#93)
+回答模板2#95"%主语没有任何东西"(,)
+的#96""(回答有什么#87,回答模板2#95)
+库#97"记住\"自然语言\"
+
+回答什么:...
+没有性质:...
+将条目\"回答什么\"复制为条目\"没有性质\"
+
+
+
+
+"(,)
+的#98""(是#51,库#97)
+没有性质#99"\"\"\"
+回答模板::%名词0没有\"%名词1\"这个性质
+
+\"\"\"
+
++没有性质(Nini,_主体)->+[del](,+没有性质)...
+->的(没有性质,回答模板)...
+
+->的(Nini,世界)->的(Nini,说)...
+->_主体(_性质,)...
+    ->+[标题]#0(_主体,)->+[标题]#1(_性质,)...
+
+->[]{
+    +[模板文本](回答模板,说)...
+        ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],+[标题]#1)
+}
+
+"(,)
+的#100""(库#97,没有性质#99)
+回答什么#101"\"\"\"
+回答模板::%名词0是%名词1
+回答模板2::%名词0... 嗯... 是%名词1
+
+\"\"\"
+
++回答什么(Nini,_主语)->+[del](,+回答什么)...
+->的(回答什么,回答模板)->的(回答什么,回答模板2)...
+
+->的(Nini,世界)->的(Nini,说)...
+->_主语(,_A1)->+[标题]#0(_主语,)...
+
+->[]{
+    []:->_A1->+[标题]#1(_A1,)...
+        ->+[模板文本](,说)->+[code](+[模板文本],回答模板)...
+        ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],+[标题]#1),
+
+    ->的(_主语,类型)->类型->+[模板文本](,说)->+[code](+[模板文本],回答模板)...
+        ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],类型),
+
+    ->[==](,_主语)->+[模板文本](,说)->+[code](+[模板文本],回答模板2)...
+        ->+[.]\"名词0\"(+[模板文本],+[标题]#0)...
+        ->+[.]\"名词1\"(+[模板文本],+[临时文本])->+[临时文本]\"个东西\",
+
+    ->+[模板文本](,说)->+[code](+[模板文本],回答模板)...
+        ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],_主语)
+}"(,)
+的#102""(库#97,回答什么#101)
+回答模板#103"%名词0是%名词1"(,)
+的#104""(回答什么#101,回答模板#103)
+回答模板2#105"%名词0... 嗯... 是%名词1"(,)
+的#106""(回答什么#101,回答模板2#105)
+回答模板#107"%名词0没有\"%名词1\"这个性质"(,)
+的#108""(没有性质#99,回答模板#107)
+保存#109"\"\"\"
+
+保存:...
+
+\"\"\"
+
++你好(Nini,)->+[del](,+你好)...
+
+->的(Nini,说):
+    ->的(Nini,聊天者)->[]{
+        []:->询问(Nini,聊天者)->+[修改内容]\"别再你好了, 问你叫什么呢\"(,说),
+
+        ->[==](,聊天者)->+询问(Nini,聊天者)...
+            ->+[修改内容]\"我还不知道你的名字呢\"(,说),
+
+        ->+[模板文本]\"%聊天者, 你好!\"(,说)->+[.](+[模板文本],聊天者)
+    },
+    ->+[修改内容]\"你的名字是?\"(,说)->+的(Nini,+聊天者)->+询问(Nini,+聊天者)
+"(,)
+的#110""(你好#41,保存#109)
 
 </st>
 
@@ -4393,6 +5332,12 @@ m_idea#2""(,)
 .window.history {
   height: 60%;
   background-color: lightgrey;
+}
+
+.window.draw {
+    height: 60%;
+    background-color: white;
+    display: none
 }
 
 .window.me {
@@ -4440,17 +5385,27 @@ m_idea#2""(,)
 
 <div id="chat_history" class="window history">
 
-<div class="chat-bubble Nini">
+<div class="chat-bubble Nini" onmousedown="changeWnd(1)">
     <div class="talktext">
-你好!
+你好! 点击这里可以切换屏幕
     </div>
 </div>
 
 </div>
 
+<!--
++[H函数](,Nini聊天框)
+-->
+
+<div id="draw_window" class="window draw" onmousedown="changeWnd(1)">
+<svg width=100%  viewBox="0 0 1000 1000" id='display_window'></svg>
+</div>
+
+
 <br>
 
-<textarea class="window me" id='edit_box' rows=4>你好</textarea>
+<textarea class="window me" id='edit_box' rows=4>A0是长方形"20,100"</textarea>
+
 
 <p id='cmd_window'></p>
 
@@ -4465,6 +5420,29 @@ Nini.init(st_core.textContent);
 var pt_Nini=Nini.m_self;
 var echo_sent=[];
 
+var show_index=0;
+
+window.addEventListener("keydown", function (event) {
+  if (event.defaultPrevented) {
+    return;
+  }
+
+  switch (event.key) {
+    case "Left": // IE/Edge specific value
+    case "ArrowLeft":
+      changeWnd(-1);
+      break;
+    case "Right": // IE/Edge specific value
+    case "ArrowRight":
+      changeWnd(1);
+      break;
+    default:
+      return; // Quit when this doesn't handle the key event.
+  }
+
+  event.preventDefault();
+}, true);
+
 edit_box.addEventListener("keydown", function (event) {
     if(event.key==='Enter') {
         var code=edit_box.value;
@@ -4474,6 +5452,25 @@ edit_box.addEventListener("keydown", function (event) {
         runCode_Nini(code);
     }
 });
+
+
+function changeWnd(i) {
+    show_index+=i;
+    show_index=(show_index)%2;
+    if(show_index==0) {
+        chat_history.style.display="block";
+        draw_window.style.display="none";
+    }
+    else {
+        chat_history.style.display="none";
+        draw_window.style.display="block";
+    }
+}
+
+function talkToNini(code) {
+    updateChatHistory(code);
+    runCode_Nini(code);
+}
 
 function updateChatHistory(code,speaker='me') {
     chat_history.innerHTML+=`
@@ -4490,7 +5487,7 @@ ${code}
 
 function runCode_Nini(code) {
     understandHear(code)
-    Nini.do('+[自我意识](Nini,)',pt_Nini);
+    Nini.do('+[自我意识](Nini,)->+[更新意境](Nini,)',pt_Nini);
     if(Nini.m_speak.m_text!='') {
         updateChatHistory(Nini.m_speak.m_text,speaker='Nini');
         Nini.m_speak.m_text='';
@@ -4525,15 +5522,24 @@ function understandHear(code) {
 
 }
 
-//understandHear('我不信');
-//understandHear('A0显示B0');
-//understandHear('我不信');
-//understandHear('我不信');
+talkToNini('按左右箭头也可以切换屏幕');
+talkToNini('没关系, 不是对你说的');
+talkToNini('显示B0');
+talkToNini('B0是圆形"50"');
+talkToNini('B0有什么');
+talkToNini('B0的半径是什么');
+talkToNini('B0在"100,100"');
+talkToNini('C0是圆形"20"');
+talkToNini('C0距离B0为"10,10"');
+talkToNini('C0的半径是"35"');
+
+
 
 </script>
 
 
 <!--
+lement
 Nini, 打开网页画板(文件)
 Nini本体(核心结构):...
 +[新建阅读窗口](,Nini本体)
