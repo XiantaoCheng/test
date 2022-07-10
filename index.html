@@ -14,6 +14,9 @@ parser
 保存:...
 -->
 
+<script src="https://stemkoski.github.io/Three.js/js/Three.js"></script>
+<script src="https://stemkoski.github.io/Three.js/js/OrbitControls.js"></script>
+
 <script>
 
 /*
@@ -1310,7 +1313,7 @@ setRange
 readSubCode_tokener
 buildPoints_tokener
 removeComment
-catch
+try
 oneStep
 */
 
@@ -2144,6 +2147,9 @@ readSubCode
 obj.print
 +[新建阅读窗口](,测试)
 [JS]
+try
+
+init
 */
 
 function listFromPt(pt) {
@@ -2179,6 +2185,8 @@ class StCore {
 */
 
     init(code) {
+        code=code.split("&gt;").join(">");
+        code=code.split("&lt;").join("<");
         var list_pt0=this.make(code),list_pt=[];
 
         for(var i in list_pt0) {
@@ -2849,7 +2857,7 @@ var Nini=new StCore();
 
 
 /*
-sort
+opDo
 +[J函数](,JS版本)
 测试:...
 测试页面:...
@@ -2993,6 +3001,7 @@ group
 保存:...
 +[新建阅读窗口](,保存)
 fun_把字句
+名词
 */
 
 
@@ -3106,7 +3115,7 @@ class NL_Parser {
             return ['',''];
         }
         
-        var name='',n;
+        var name='',n,head_type='no';
         
         for(var i=0;i<code.length;i++) {
             n=this.word_in_dict(code.slice(i,code.length),this.m_dict_动词)+this.word_in_dict(code.slice(i,code.length),this.m_dict_助词)+this.word_in_dict(code.slice(i,code.length),this.m_dict_连词)+this.word_in_dict(code.slice(i,code.length),this.m_dict_介词)+this.word_in_dict(code.slice(i,code.length),this.m_dict_副词)+this.word_in_dict(code.slice(i,code.length),this.m_dict_标点);
@@ -3120,7 +3129,8 @@ class NL_Parser {
                     return [code,''];
                 }
             }
-            if(code[i]=='"') {
+            if(code[i]=='"' | code[i]=='(' | code[i]=='“' | code[i]=='（') {
+                head_type=code[i];
                 if(i==0) {
                     name="临时文本";
                 }
@@ -3136,7 +3146,19 @@ class NL_Parser {
         }
         code=code.slice(i,code.length);
         var text='';
-        var result=code.match(/^"[^"]+"/);
+        var result=null;
+        if(head_type==='"') {
+            result=code.match(/^"[^"]+"/);
+        }
+        else if(head_type==='“') {
+            result=code.match(/^“[^”]+”/);
+        }
+        else if(head_type==='(') {
+            result=code.match(/^\([^)]+\)/);
+        }
+        else if(head_type==='（') {
+            result=code.match(/^（[^）]+）/);
+        }
 
         if(result!==null) {
             result=result[0];
@@ -4361,6 +4383,213 @@ fun_单句
 测试(J函数):...
 +[新建阅读窗口](,测试)
 */
+/*
++[J函数](,ThreeJS)
+
+three(库)::https://stemkoski.github.io/Three.js/js/Three.js
+OrbitControls(库)::https://stemkoski.github.io/Three.js/js/OrbitControls.js
+three->库(three,)->+[del](,库)->+[del](,three)
+
+保存:...
+lookAt
+*/
+
+
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var cube;
+
+class Scene3D {
+    constructor(ID='') {
+        this.m_ID=ID;
+        this.m_container='';
+        this.m_scene='';
+        this.m_camera='';
+        this.m_render='';
+        this.m_control='';
+    }
+
+    init(ID='') {
+        if(ID!=="") {
+            this.m_ID=ID;
+            this.m_container = document.getElementById(this.m_ID);
+        }
+        else {
+            this.m_container=document.body;
+        }
+        if(this.m_container===null) {
+            this.m_container=document.body;
+        }
+
+        // SCENE
+        this.m_scene = new THREE.Scene();
+    
+        // CAMERA
+        var SCREEN_WIDTH = this.m_container.offsetWidth; 
+        var SCREEN_HEIGHT = this.m_container.offsetHeight;
+        var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+        this.m_camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+        this.m_scene.add(this.m_camera);
+        this.m_camera.position.set(0,150,400);
+        this.m_camera.lookAt(this.m_scene.position);
+        //this.m_camera.lookAt(new THREE.Vector3(0,600,0));
+        //this.m_camera.lookAt(0,600,0);
+    
+        //RENDER
+        this.m_renderer = new THREE.WebGLRenderer( {antialias:true} );
+        this.m_renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+        
+        this.m_container.appendChild( this.m_renderer.domElement );
+    
+        // CONTROLS
+        this.m_controls = new THREE.OrbitControls( this.m_camera, this.m_renderer.domElement );
+        // LIGHT
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(0,150,100);
+        this.m_scene.add(light);
+    
+        // FLOOR
+        var floorTexture = new THREE.ImageUtils.loadTexture( 'https://stemkoski.github.io/Three.js/images/checkerboard.jpg' );
+        floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+        floorTexture.repeat.set( 10, 10 );
+        var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+    
+        var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+        var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.position.y = -0.5;
+        floor.rotation.x = Math.PI / 2;
+        this.m_scene.add(floor);
+    
+        // SKYBOX/FOG
+        var skyBoxGeometry = new THREE.CubeGeometry( 10000, 10000, 10000 );
+        var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x9999ff, side: THREE.BackSide } );
+        var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
+        this.m_scene.add(skyBox);
+    }
+
+    update() {
+        this.m_renderer.render( this.m_scene, this.m_camera );
+        this.m_controls.update();
+    }
+
+    addBox(L,W,H,x,y,z) {
+        var material = new THREE.MeshNormalMaterial();
+        var cubeGeometry = new THREE.CubeGeometry( 1, 1, 1 );
+        var cube = new THREE.Mesh( cubeGeometry, material );
+        cube.position.set(x,y,z);
+        cube.scale.x=L;
+        cube.scale.y=W;
+        cube.scale.z=H;
+        this.m_scene.add( cube );
+        return cube;
+    }
+
+    addCylinder(R,H,x,y,z) {
+        var material = new THREE.MeshNormalMaterial();
+        var geometry = new THREE.CylinderGeometry( 1,1,1,80,4 );
+        var shape = new THREE.Mesh( geometry, material );
+        shape.position.set(x, y, z);
+        shape.scale.x=R;
+        shape.scale.y=H;
+        shape.scale.z=R;
+        this.m_scene.add( shape );
+        return shape;
+    }
+
+    addSphere(R,x,y,z) {
+        var material = new THREE.MeshNormalMaterial();
+        var geometry = new THREE.SphereGeometry( 1,32,16 );
+        var shape = new THREE.Mesh( geometry, material );
+        shape.scale.x=R;
+        shape.scale.y=R;
+        shape.scale.z=R;
+        shape.position.set(x, y, z);
+        this.m_scene.add( shape );
+        return shape;
+    }
+
+    setRotationByEuler(shape,alpha,beta,gamma) {
+        shape.setRotationFromEuler(new THREE.Euler(0,0,0,'XYZ'));
+        shape.rotateZ(alpha/180*Math.PI);
+        shape.rotateX(beta/180*Math.PI);
+        shape.rotateZ(gamma/180*Math.PI);
+        return shape;
+    }
+
+    rotateInWorld(shape,pt,angle,axis='Z') {
+        var T=new THREE.Matrix4().identity();
+        T=T.multiply(new THREE.Matrix4().makeTranslation(pt[0],pt[1],pt[2]));
+        if(axis==='X') {
+            T=T.multiply(new THREE.Matrix4().makeRotationX(angle/180*Math.PI));
+        }
+        else if(axis==='Y') {
+            T=T.multiply(new THREE.Matrix4().makeRotationY(angle/180*Math.PI));
+        }
+        else if(axis==='Z') {
+            T=T.multiply(new THREE.Matrix4().makeRotationZ(angle/180*Math.PI));
+        }
+        T=T.multiply(new THREE.Matrix4().makeTranslation(-pt[0],-pt[1],-pt[2]));
+        
+        shape.updateMatrix();
+        shape.applyMatrix(T);
+        return shape;
+    }
+
+    lookAt_pt(shape,pt) {
+        shape.lookAt(new THREE.Vector3(pt[0],pt[1],pt[2]));
+        return shape;
+    }
+
+    lookAt(shape,shape0) {
+        shape.lookAt(shape0.position);
+        return shape;
+    }
+
+    cameraLookAt_pt(pt) {
+        this.lookAt_pt(this.m_camera,pt);
+        this.m_controls.center.x=pt[0];
+        this.m_controls.center.y=pt[1];
+        this.m_controls.center.z=pt[2];
+    }
+
+    cameraLookAt(shape) {
+        this.lookAt(this.m_camera,shape);
+        this.m_controls.center.x=shape.position.x;
+        this.m_controls.center.y=shape.position.y;
+        this.m_controls.center.z=shape.position.z;
+    }
+
+}
+
+var world_3D=new Scene3D();
+
+function animate_3D() {
+    requestAnimationFrame(animate_3D);
+    world_3D.update();
+}
+
+function printMatrix(matrix) {
+    var list_val=matrix.elements;
+    var str_line='';
+    for(var i=0;i<4;i++) {
+        for(var j=0;j<4;j++) {
+            str_line+=`${list_val[j+i*4]}, `;
+        }
+        print(str_line);
+        str_line='';
+    }
+    print();
+}
+
+
+/*
+例子:...
+测试:...
++[新建阅读窗口](,测试)
++[J函数](,ThreeJS)
+*/
 function print() {
     if(document.getElementById("cmd_window").innerHTML===null) {
         return;
@@ -4489,7 +4718,7 @@ m_idea#2"
 词典#9"
 
 名词:...
-
++[复制结构](,名词)
 
 
 
@@ -4497,24 +4726,30 @@ m_idea#2"
 的#10""(Nini#0,词典#9)
 名词#11"Nini, 打开词典的条目(节点)
 Nini, 打开词典的句子库(节点)
+记住\"自然语言\"
 
 线段:...
 圆形:...
 长方形:...
+
+立方体:...
+圆柱体:...
+球体:...
+将条目\"立方体\"复制为条目\"球体\"
 +[粘贴](,名词)
 
 
 "(,)
 的#12""(词典#9,名词#11)
-长方形#13"
+圆柱体#13"
 
 定义:...
-定义的\"圆形\"替换为\"长方形\"
+定义的\"立方体\"替换为\"圆柱体\"
 定义的\"matlab\"替换为\"JS\"
 
 
 "(,)
-的#14""(名词#11,长方形#13)
+的#14""(名词#11,圆柱体#13)
 圆形#15"
 定义:...
 定义的\"线段\"替换为\"圆形\"
@@ -4529,7 +4764,232 @@ Nini, 打开词典的句子库(节点)
 
 "(,)
 的#18""(名词#11,线段#17)
-定义#19"\"\"\"
+长方形#19"
+
+定义:...
+定义的\"圆形\"替换为\"长方形\"
+定义的\"matlab\"替换为\"JS\"
+
+
+"(,)
+的#20""(名词#11,长方形#19)
+球体#21"
+
+定义:...
+定义的\"立方体\"替换为\"球体\"
+定义的\"matlab\"替换为\"JS\"
+
+
+"(,)
+的#22""(名词#11,球体#21)
+立方体#23"
+
+定义:...
+定义的\"长方形\"替换为\"立方体\"
+定义的\"matlab\"替换为\"JS\"
+
+
+"(,)
+的#24""(名词#11,立方体#23)
+定义#25"\"\"\"
+[eq](+[定义],定义)
+JS代码:...
++[新建阅读窗口](,JS代码)
+
+\"\"\"
+
++定义(_立方体,立方体)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_立方体,类型)->类型->+[修改内容]\"立方体\"(,类型),
+        ->+的(_立方体,+类型)->+类型\"立方体\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_box\"(+[JS],_立方体)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](立方体,+[临时文本])...
+->[]{
+    []:->的(_立方体,长度)->长度->+[o]\"L\"(+[JS],长度),
+        ->+的(_立方体,+长度)->+长度\"1\"->+[o]\"L\"(+[JS],+长度)
+}...
+->[]{
+    []:->的(_立方体,宽度)->宽度->+[o]\"W\"(+[JS],宽度),
+        ->+的(_立方体,+宽度)->+宽度\"1\"->+[o]\"W\"(+[JS],+宽度)
+}...
+->[]{
+    []:->的(_立方体,高度)->高度->+[o]\"H\"(+[JS],高度),
+        ->+的(_立方体,+高度)->+高度\"1\"->+[o]\"H\"(+[JS],+高度)
+}...
+->[]{
+    []:->在(_立方体,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_立方体,+空间点)->+空间点\"0,0,0\"->+[o]\"pt\"(+[JS],+空间点)
+}
+
+
+"(,)
+的#26""(立方体#23,定义#25)
+JS代码#27"/*
+
+*/
+
+
+var siz=[%siz],pt=[%pt];
+var L='%L';
+var W='%W';
+var H='%H';
+
+if(siz[0]!==undefined) {
+    L=siz[0];
+}
+if(siz[1]!==undefined) {
+    W=siz[1];
+}
+if(siz[2]!==undefined) {
+    H=siz[2];
+}
+if(pt.length<3) {
+    pt=[0,0,0];
+}
+
+if(var_box==='') {
+    var_box=world_3D.addBox(L,W,H,pt[0],pt[1],pt[2]);
+} else {
+    var_box.position.set(pt[0],pt[1],pt[2]);
+    var_box.scale.x=L;
+    var_box.scale.y=W;
+    var_box.scale.z=H;
+}
+
+
+
+"(,)
+的#28""(定义#25,JS代码#27)
+定义#29"\"\"\"
+[eq](+[定义],定义)
+JS代码:...
++[新建阅读窗口](,JS代码)
+
+\"\"\"
+
++定义(_球体,球体)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_球体,类型)->类型->+[修改内容]\"球体\"(,类型),
+        ->+的(_球体,+类型)->+类型\"球体\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_ball\"(+[JS],_球体)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](球体,+[临时文本])...
+->[]{
+    []:->的(_球体,半径)->半径->+[o]\"R\"(+[JS],半径),
+        ->+的(_球体,+半径)->+半径\"1\"->+[o]\"R\"(+[JS],+半径)
+}...
+->[]{
+    []:->在(_球体,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_球体,+空间点)->+空间点\"0,0,0\"->+[o]\"pt\"(+[JS],+空间点)
+}
+
+
+"(,)
+的#30""(球体#21,定义#29)
+JS代码#31"/*
+
+*/
+
+
+var siz=[%siz],pt=[%pt];
+var R='%R';
+
+if(siz[0]!==undefined) {
+    R=siz[0];
+}
+if(pt.length<3) {
+    pt=[0,0,0];
+}
+
+if(var_ball==='') {
+    var_ball=world_3D.addSphere(R,pt[0],pt[1],pt[2]);
+} else {
+    var_ball.position.set(pt[0],pt[1],pt[2]);
+    var_ball.scale.x=R;
+    var_ball.scale.y=R;
+    var_ball.scale.z=R;
+}
+
+
+
+"(,)
+的#32""(定义#29,JS代码#31)
+定义#33"\"\"\"
+[eq](+[定义],定义)
+JS代码:...
++[新建阅读窗口](,JS代码)
+
+\"\"\"
+
++定义(_长方形,长方形)->+[del](,+定义)...
+->的(定义,JS代码)...
+
+->[]{
+    []:->的(_长方形,类型)->类型->+[修改内容]\"长方形\"(,类型),
+        ->+的(_长方形,+类型)->+类型\"长方形\"
+}...
+
+->+[JS]->+[code](+[JS],JS代码)...
+->+[v]\"var_rect\"(+[JS],_长方形)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](长方形,+[临时文本])...
+->[]{
+    []:->的(_长方形,长度)->长度->+[o]\"L\"(+[JS],长度),
+        ->+的(_长方形,+长度)->+长度\"1\"->+[o]\"L\"(+[JS],+长度)
+}...
+->[]{
+    []:->的(_长方形,宽度)->宽度->+[o]\"W\"(+[JS],宽度),
+        ->+的(_长方形,+宽度)->+宽度\"1\"->+[o]\"W\"(+[JS],+宽度)
+}...
+->[]{
+    []:->在(_长方形,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_长方形,+空间点)->+空间点\"0,0\"->+[o]\"pt\"(+[JS],+空间点)
+}
+
+
+"(,)
+的#34""(长方形#19,定义#33)
+JS代码#35"
+var siz=[%siz],pt=[%pt];
+var W='%W';
+var L='%L';
+
+if(siz[0]!==undefined) {
+    W=siz[0];
+}
+if(siz[1]!==undefined) {
+    L=siz[1];
+}
+if(pt.length<2) {
+    pt=[0,0];
+}
+
+if(var_rect==='') {
+    var_rect=document.createElementNS(\"http://www.w3.org/2000/svg\",'rect');
+    var_rect.setAttribute('width',W);
+    var_rect.setAttribute('height',L);
+    var_rect.setAttribute('x',pt[0]);
+    var_rect.setAttribute('y',pt[1]);
+    var_rect.setAttribute('fill','#ffffff');
+    var_rect.setAttribute('stroke','#000000');
+    display_window.appendChild(var_rect);
+} else {
+    var_rect.setAttribute('width',W);
+    var_rect.setAttribute('height',L);
+    var_rect.setAttribute('x',pt[0]);
+    var_rect.setAttribute('y',pt[1]);
+}
+"(,)
+的#36""(定义#33,JS代码#35)
+定义#37"\"\"\"
 [eq](+[定义],定义)
 JS代码:...
 JS代码的\"rect\"替换为\"line\"
@@ -4564,8 +5024,8 @@ JS代码的\"rect\"替换为\"line\"
 
 
 "(,)
-的#20""(线段#17,定义#19)
-JS代码#21"
+的#38""(线段#17,定义#37)
+JS代码#39"
 var siz=[%siz];
 var pt0=[%pt0],pt1=[%pt1];
 
@@ -4592,8 +5052,8 @@ if(var_line==='') {
     var_line.setAttribute('y2',pt1[1]);
 }
 "(,)
-的#22""(定义#19,JS代码#21)
-定义#23"\"\"\"
+的#40""(定义#37,JS代码#39)
+定义#41"\"\"\"
 JS代码:...
 JS代码的\"rect\"替换为\"circle\"
 
@@ -4621,8 +5081,8 @@ JS代码的\"rect\"替换为\"circle\"
 
 
 "(,)
-的#24""(圆形#15,定义#23)
-JS代码#25"/*
+的#42""(圆形#15,定义#41)
+JS代码#43"/*
 
 */
 
@@ -4651,75 +5111,76 @@ if(var_circle==='') {
 }
 
 "(,)
-的#26""(定义#23,JS代码#25)
-定义#27"\"\"\"
+的#44""(定义#41,JS代码#43)
+定义#45"\"\"\"
 [eq](+[定义],定义)
 JS代码:...
 +[新建阅读窗口](,JS代码)
 
 \"\"\"
 
-+定义(_长方形,长方形)->+[del](,+定义)...
++定义(_圆柱体,圆柱体)->+[del](,+定义)...
 ->的(定义,JS代码)...
 
 ->[]{
-    []:->的(_长方形,类型)->类型->+[修改内容]\"长方形\"(,类型),
-        ->+的(_长方形,+类型)->+类型\"长方形\"
+    []:->的(_圆柱体,类型)->类型->+[修改内容]\"圆柱体\"(,类型),
+        ->+的(_圆柱体,+类型)->+类型\"圆柱体\"
 }...
 
 ->+[JS]->+[code](+[JS],JS代码)...
-->+[v]\"var_rect\"(+[JS],_长方形)...
-->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](长方形,+[临时文本])...
+->+[v]\"var_cylinder\"(+[JS],_圆柱体)...
+->+[.]\"siz\"(+[JS],+[临时文本])->[m_text](圆柱体,+[临时文本])...
 ->[]{
-    []:->的(_长方形,长度)->长度->+[o]\"L\"(+[JS],长度),
-        ->+的(_长方形,+长度)->+长度\"1\"->+[o]\"L\"(+[JS],+长度)
+    []:->的(_圆柱体,半径)->半径->+[o]\"R\"(+[JS],半径),
+        ->+的(_圆柱体,+半径)->+半径\"1\"->+[o]\"R\"(+[JS],+半径)
 }...
 ->[]{
-    []:->的(_长方形,宽度)->宽度->+[o]\"W\"(+[JS],宽度),
-        ->+的(_长方形,+宽度)->+宽度\"1\"->+[o]\"W\"(+[JS],+宽度)
+    []:->的(_圆柱体,高度)->高度->+[o]\"H\"(+[JS],高度),
+        ->+的(_圆柱体,+高度)->+高度\"1\"->+[o]\"H\"(+[JS],+高度)
 }...
 ->[]{
-    []:->在(_长方形,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
-        ->+在(_长方形,+空间点)->+空间点\"0,0\"->+[o]\"pt\"(+[JS],+空间点)
+    []:->在(_圆柱体,空间点)->空间点->+[o]\"pt\"(+[JS],空间点),
+        ->+在(_圆柱体,+空间点)->+空间点\"0,0,0\"->+[o]\"pt\"(+[JS],+空间点)
 }
 
 
 "(,)
-的#28""(长方形#13,定义#27)
-JS代码#29"
+的#46""(圆柱体#13,定义#45)
+JS代码#47"/*
+
+*/
+
+
 var siz=[%siz],pt=[%pt];
-var W='%W';
-var L='%L';
+var R='%R';
+var H='%H';
 
 if(siz[0]!==undefined) {
-    W=siz[0];
+    R=siz[0];
 }
 if(siz[1]!==undefined) {
-    L=siz[1];
+    H=siz[1];
 }
-if(pt.length<2) {
-    pt=[0,0];
+if(pt.length<3) {
+    pt=[0,0,0];
 }
 
-if(var_rect==='') {
-    var_rect=document.createElementNS(\"http://www.w3.org/2000/svg\",'rect');
-    var_rect.setAttribute('width',W);
-    var_rect.setAttribute('height',L);
-    var_rect.setAttribute('x',pt[0]);
-    var_rect.setAttribute('y',pt[1]);
-    var_rect.setAttribute('fill','#ffffff');
-    var_rect.setAttribute('stroke','#000000');
-    display_window.appendChild(var_rect);
+if(var_cylinder==='') {
+    var_cylinder=world_3D.addCylinder(R,H,pt[0],pt[1],pt[2]);
 } else {
-    var_rect.setAttribute('width',W);
-    var_rect.setAttribute('height',L);
-    var_rect.setAttribute('x',pt[0]);
-    var_rect.setAttribute('y',pt[1]);
+    var_cylinder.position.set(pt[0],pt[1],pt[2]);
+    var_cylinder.scale.x=R;
+    var_cylinder.scale.y=H;
+    var_cylinder.scale.z=R;
 }
+
+
+
 "(,)
-的#30""(定义#27,JS代码#29)
-词语#31"\"\"\"
+的#48""(定义#45,JS代码#47)
+词语#49"\"\"\"
 Nini, 打开句子结构的结构场景(节点)
+Nini, 打开名词(库)
 
 \"\"\"
 
@@ -4732,10 +5193,11 @@ Nini, 打开句子结构的结构场景(节点)
 
 
 "(,)
-的#32""(m_idea#2,词语#31)
-自我意识#33"\"\"\"
+的#50""(m_idea#2,词语#49)
+自我意识#51"\"\"\"
 库:...
 +[新建阅读窗口](,库)
++[复制结构](,库)
 
 保存:...
 
@@ -4754,8 +5216,8 @@ Nini, 打开句子结构的结构场景(节点)
 
 
 "(,)
-的#34""(m_lib#1,自我意识#33)
-更新意境#35"\"\"\"
+的#52""(m_lib#1,自我意识#51)
+更新意境#53"\"\"\"
 
 
 \"\"\"
@@ -4772,13 +5234,22 @@ Nini, 打开句子结构的结构场景(节点)
             ->+[做](_意象,+圆形)->+[code](+[做],定义#1)->+圆形->+[del](,+圆形),
 
         ->[==]\"线段\"(,类型)->的(名词,线段)->线段->的(线段,定义#2)...
-            ->+[做](_意象,+线段)->+[code](+[做],定义#2)->+线段->+[del](,+线段)
+            ->+[做](_意象,+线段)->+[code](+[做],定义#2)->+线段->+[del](,+线段),
+
+        ->[==]\"立方体\"(,类型)->的(名词,立方体)->立方体->的(立方体,定义#3)...
+            ->+[做](_意象,+立方体)->+[code](+[做],定义#3)->+立方体->+[del](,+立方体),
+
+        ->[==]\"圆柱体\"(,类型)->的(名词,圆柱体)->圆柱体->的(圆柱体,定义#4)...
+            ->+[做](_意象,+圆柱体)->+[code](+[做],定义#4)->+圆柱体->+[del](,+圆柱体),
+
+        ->[==]\"球体\"(,类型)->的(名词,球体)->球体->的(球体,定义#5)...
+            ->+[做](_意象,+球体)->+[code](+[做],定义#5)->+球体->+[del](,+球体)
 }
 
 
 "(,)
-的#36""(m_lib#1,更新意境#35)
-库#37"
+的#54""(m_lib#1,更新意境#53)
+库#55"
 你好:...
 问题:...
 
@@ -4787,8 +5258,8 @@ Nini, 打开句子结构的结构场景(节点)
 
 
 "(,)
-的#38""(自我意识#33,库#37)
-保存#39"\"\"\"
+的#56""(自我意识#51,库#55)
+保存#57"\"\"\"
 库:...
 +[新建阅读窗口](,库)
 
@@ -4810,8 +5281,8 @@ Nini, 打开句子结构的结构场景(节点)
         ->+[做](Nini,_动词)->+[code](+[做],操作),
     ->+[修改内容]\"我不懂\"(,说)
 "(,)
-的#40""(自我意识#33,保存#39)
-你好#41"\"\"\"
+的#58""(自我意识#51,保存#57)
+你好#59"\"\"\"
 保存:...
 
 \"\"\"
@@ -4829,8 +5300,8 @@ Nini, 打开句子结构的结构场景(节点)
     },
     ->+[修改内容]\"要做些什么呢?\"(,说)->+的(Nini,+聊天者)
 "(,)
-的#42""(库#37,你好#41)
-问题#43"\"\"\"
+的#60""(库#55,你好#59)
+问题#61"\"\"\"
 
 
 \"\"\"
@@ -4850,8 +5321,8 @@ Nini, 打开句子结构的结构场景(节点)
 
 
 "(,)
-的#44""(库#37,问题#43)
-操作#45"\"\"\"
+的#62""(库#55,问题#61)
+操作#63"\"\"\"
 库:...
 
 \"\"\"
@@ -4871,28 +5342,42 @@ Nini, 打开句子结构的结构场景(节点)
 
 
 "(,)
-的#46""(库#37,操作#45)
-库#47"记住\"自然语言\"
+的#64""(库#55,操作#63)
+库#65"记住\"自然语言\"
 
 显示:...
 是:...
 有:...
 在:...
 距离:...
-距离的\"在\"替换为\"距离\"
+朝向:...
+旋转:...
+将条目\"距离\"复制为条目\"旋转\"
+旋转的\"距离\"替换为\"旋转\"
 
 +[新建阅读窗口](,是)
+
+
+绕A0, B0沿Z方向旋转\"90\"
 "(,)
-的#48""(操作#45,库#47)
-显示#49"\"\"\"
+的#66""(操作#63,库#65)
+显示#67"\"\"\"
 Nini, 打开花园(文件)
+Nini, 打开网页画板(文件)
+回答模板1::%三维画板
+回答模板2::%网页画板
+库:
 
 \"\"\"
 
 +显示(Nini,显示)->+[del](,+显示)...
+->的(显示#0,回答模板1)->的(显示#0,回答模板2)...
 
 ->的(Nini,世界)->的(Nini,说)...
 ->显示(,_名词)->_名词:
+    ->[is](_名词,三维画板)->三维画板->+[修改内容](回答模板1,说),
+    ->[is](_名词,网页画板)->网页画板->+[修改内容](回答模板2,说),
+
     ->[词语](世界,_名词)->是([词语],_宾语)...
     ->_宾语(,_A1)->+[标题]#0(_宾语,)->[]{
         []:->_A1->+[标题]#1(_A1,)...
@@ -4906,8 +5391,8 @@ Nini, 打开花园(文件)
 
 
 "(,)
-的#50""(库#47,显示#49)
-是#51"\"\"\"
+的#68""(库#65,显示#67)
+是#69"\"\"\"
 库:...
 +[新建阅读窗口](,库)
 
@@ -4940,8 +5425,8 @@ Nini, 打开花园(文件)
     }
 
 "(,)
-的#52""(库#47,是#51)
-有#53"\"\"\"
+的#70""(库#65,是#69)
+有#71"\"\"\"
 库:...
 +[新建阅读窗口](,库)
 
@@ -4970,8 +5455,8 @@ Nini, 打开花园(文件)
 
 
 "(,)
-的#54""(库#47,有#53)
-在#55"\"\"\"
+的#72""(库#65,有#71)
+在#73"\"\"\"
 回答模板::%名词是什么?
 库:...
 +[新建阅读窗口](,库)
@@ -5004,8 +5489,68 @@ Nini, 打开花园(文件)
 
 
 "(,)
-的#56""(库#47,在#55)
-距离#57"\"\"\"
+的#74""(库#65,在#73)
+朝向#75"\"\"\"
+回答模板::%名词是什么?
+库:...
++[新建阅读窗口](,库)
+
+\"\"\"
+
++朝向(Nini,朝向)->+[del](,+朝向)...
+->的(朝向#0,回答模板)->的(朝向#0,库)...
+
+->的(Nini,世界)->的(Nini,说)...
+
+->朝向(_名词,_名词1)->_名词->[]{
+    []:->[词语](世界,_名词),
+    ->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+}->[词语](世界,_名词)->是([词语],_主语)...
+
+->_名词1:
+    ->+[做](_主语,朝向)->+[code](+[做],操作)...
+        ->+说话(+[做],说)->+[del](,+说话)->+范围(+[做],世界)->+[del](,+范围)...
+        ->的(库,操作)->操作
+
+
+
+
+"(,)
+的#76""(库#65,朝向#75)
+旋转#77"\"\"\"
+回答模板::%名词是什么?
+回答模板2::%名词在哪里?
+库:...
++[新建阅读窗口](,库)
+
+\"\"\"
+
++旋转(Nini,旋转)->+[del](,+旋转)...
+->的(旋转#0,回答模板)->的(旋转#0,回答模板2)->的(旋转#0,库)...
+
+->的(Nini,世界)->的(Nini,说)...
+
+->旋转(_名词,_名词1)->_名词->[]{
+    []:->[词语](世界,_名词),
+    ->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+}->[词语](世界,_名词)->是([词语],_主语)...
+
+->[]{
+    []:->在(_主语,空间点)->空间点,
+    ->+[标题](_名词,)->+[模板文本](回答模板2,说)->+[.]\"名词\"(+[模板文本],+[标题])
+}...
+
+->_名词1:
+    ->+[做](_主语,旋转)->+[code](+[做],操作)...
+        ->+说话(+[做],说)->+[del](,+说话)->+范围(+[做],世界)->+[del](,+范围)...
+        ->的(库,操作)->操作
+
+
+
+
+"(,)
+的#78""(库#65,旋转#77)
+距离#79"\"\"\"
 回答模板::%名词是什么?
 库:...
 +[新建阅读窗口](,库)
@@ -5035,18 +5580,18 @@ Nini, 打开花园(文件)
 
 
 "(,)
-的#58""(库#47,距离#57)
-回答模板#59"%名词是什么?"(,)
-的#60""(距离#57,回答模板#59)
-库#61"
+的#80""(库#65,距离#79)
+回答模板#81"%名词是什么?"(,)
+的#82""(距离#79,回答模板#81)
+库#83"
 操作:...
 
 
 
 
 "(,)
-的#62""(距离#57,库#61)
-操作#63"\"\"\"
+的#84""(距离#79,库#83)
+操作#85"\"\"\"
 回答模板::%名词是什么?
 回答模板2::我不知道%名词在哪里
 库:...
@@ -5075,27 +5620,193 @@ JS代码:...
 
 
 "(,)
-的#64""(库#61,操作#63)
-回答模板#65"%名词是什么?"(,)
-的#66""(操作#63,回答模板#65)
-回答模板2#67"我不知道%名词在哪里"(,)
-的#68""(操作#63,回答模板2#67)
-库#69""(,)
-的#70""(操作#63,库#69)
-JS代码#71"/*
+的#86""(库#83,操作#85)
+回答模板#87"%名词是什么?"(,)
+的#88""(操作#85,回答模板#87)
+回答模板2#89"我不知道%名词在哪里"(,)
+的#90""(操作#85,回答模板2#89)
+库#91""(,)
+的#92""(操作#85,库#91)
+JS代码#93"/*
 
 */
 
 var dr=[%dr],pt=[%pt];
 var ans;
 
-ans=[pt[0]+dr[0],pt[1]+dr[1]];
+for(var i in pt) {
+    pt[i]+=dr[i];
+}
+ans=pt;
 
 "(,)
-的#72""(操作#63,JS代码#71)
-回答模板#73"%名词是什么?"(,)
-的#74""(在#55,回答模板#73)
-保存#75"\"\"\"
+的#94""(操作#85,JS代码#93)
+库#95"
+操作:...
+操作的\"距离\"替换为\"旋转\"
+
+
+
+"(,)
+的#96""(旋转#77,库#95)
+回答模板#97"%名词是什么?"(,)
+的#98""(旋转#77,回答模板#97)
+回答模板2#99"%名词在哪里?"(,)
+的#100""(旋转#77,回答模板2#99)
+操作#101"\"\"\"
+回答模板::%名词是什么?
+回答模板2::我不知道%名词在哪里
+库:...
+JS代码:...
++[新建阅读窗口](,JS代码)
+
+\"\"\"
+
++操作(_主语,旋转)->+[del](,+操作)...
+->的(操作,JS代码)->的(操作,回答模板)->的(操作,回答模板2)...
+
+->说话(+操作,说)->范围(+操作,世界)...
+
+->旋转(,_名词)->沿(旋转,_名词3)...
+
+->在(_主语,空间点#0)...
+->+[JS](,空间点#0)->+[code](+[JS],JS代码)->+[v]\"var_shape\"(+[JS],_主语)...
+
+->[]{
+    []:->[is](_名词3,X方向)->X方向->+[.]\"type_str\"(+[JS],+[临时文本]#X)->+[临时文本]#X\"X\",
+    ->[is](_名词3,Y方向)->Y方向->+[.]\"type_str\"(+[JS],+[临时文本]#Y)->+[临时文本]#Y\"Y\",
+    ->[is](_名词3,Z方向)->Z方向->+[.]\"type_str\"(+[JS],+[临时文本]#Z)->+[临时文本]#Z\"Z\"
+}...
+
+->[]{
+    []:->绕(旋转,_名词2)->_名词2->[]{
+        []:->[is](_名词2,临时文本)->临时文本->+[.]\"pt0\"(+[JS],临时文本),
+        ->[词语](世界,_名词2)->是([词语],_宾语)->[]{
+            []:->在(_宾语,空间点)->空间点->+[.]\"pt0\"(+[JS],空间点),
+            ->+[标题](_名词2,)->+[模板文本](回答模板2,说)->+[.]\"名词\"(+[模板文本],+[标题])
+        },
+        ->+[标题](_名词2,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题])
+    },
+    ->在(_主语,空间点)->空间点->+[.]\"pt0\"(+[JS],空间点)
+}...
+
+->+[.]\"angle\"(+[JS],_名词)
+"(,)
+的#102""(库#95,操作#101)
+JS代码#103"/*
+
+*/
+
+var angle='%angle';
+var pt0=[%pt0];
+var ans;
+
+world_3D.rotateInWorld(var_shape,pt0,+angle,'%type_str');
+ans=[var_shape.position.x,var_shape.position.y,var_shape.position.z];
+
+"(,)
+的#104""(操作#101,JS代码#103)
+库#105""(,)
+的#106""(操作#101,库#105)
+回答模板2#107"我不知道%名词在哪里"(,)
+的#108""(操作#101,回答模板2#107)
+回答模板#109"%名词是什么?"(,)
+的#110""(操作#101,回答模板#109)
+回答模板#111"%名词是什么?"(,)
+的#112""(朝向#75,回答模板#111)
+库#113"
+操作:...
+操作的\"距离\"替换为\"朝向\"
+
+
+
+"(,)
+的#114""(朝向#75,库#113)
+操作#115"\"\"\"
+回答模板::%名词是什么?
+回答模板2::我不知道%名词在哪里
+库:...
+JS代码:...
+JS代码2:...
+
+\"\"\"
+
++操作(_主语,朝向)->+[del](,+操作)...
+->的(操作,JS代码)->的(操作,JS代码2)...
+->的(操作,回答模板)->的(操作,回答模板2)...
+
+->说话(+操作,说)->范围(+操作,世界)...
+
+->+[JS]->[]{
+    []:->+[v]\"var_shape\"(+[JS],_主语),->+[.]\"var_shape\"(+[JS],+[临时文本])
+}...
+
+->朝向(,_名词):
+->[is](_名词,临时文本)->临时文本(,)...
+    ->+[code](+[JS],JS代码2)->+[.]\"angle\"(+[JS],临时文本),
+->[is](_名词,位置)->位置(,)...
+    ->+[code](+[JS],JS代码)->+[.]\"pt\"(+[JS],位置),
+
+->[词语](世界,_名词)->是([词语],_宾语)...
+    ->[]{
+        []:->在(_宾语,空间点#1)...
+            ->+[code](+[JS],JS代码)->+[.]\"pt\"(+[JS],空间点#1),
+
+        ->+[标题]#0(_名词,)->+[模板文本](回答模板2,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+    },
+
+->+[标题]#0(_名词,)->+[模板文本](回答模板,说)->+[.]\"名词\"(+[模板文本],+[标题]#0)
+
+
+
+
+
+"(,)
+的#116""(库#113,操作#115)
+回答模板#117"%名词是什么?"(,)
+的#118""(操作#115,回答模板#117)
+回答模板2#119"我不知道%名词在哪里"(,)
+的#120""(操作#115,回答模板2#119)
+库#121""(,)
+的#122""(操作#115,库#121)
+JS代码#123"/*
+
+*/
+
+var pt=[%pt];
+
+try {
+    if(var_shape===\"\") {
+        world_3D.cameraLookAt_pt(pt);
+    }
+    else {
+        world_3D.lookAt_pt(var_shape,pt);
+    }
+} catch(e) {
+    print(e);
+}
+
+
+"(,)
+的#124""(操作#115,JS代码#123)
+JS代码2#125"/*
+
+*/
+
+var angle=[%angle];
+
+try {
+    world_3D.setRotationByEuler(var_shape,angle[0],angle[1],angle[2]);
+} catch(e) {
+    print(e);
+}
+
+
+"(,)
+的#126""(操作#115,JS代码2#125)
+回答模板#127"%名词是什么?"(,)
+的#128""(在#73,回答模板#127)
+保存#129"\"\"\"
 回答模板::%名词是什么?
 
 保存:...
@@ -5122,15 +5833,15 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 
 
 "(,)
-的#76""(在#55,保存#75)
-库#77"
+的#130""(在#73,保存#129)
+库#131"
 
 在位置:...
 
 
 "(,)
-的#78""(在#55,库#77)
-在位置#79"\"\"\"
+的#132""(在#73,库#131)
+在位置#133"\"\"\"
 回答模板::%名词是什么?
 回答模板2::我不知道%名词在哪里
 
@@ -5155,20 +5866,20 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 
 
 "(,)
-的#80""(库#77,在位置#79)
-回答模板2#81"我不知道%名词在哪里"(,)
-的#82""(在位置#79,回答模板2#81)
-回答模板#83"%名词是什么?"(,)
-的#84""(在位置#79,回答模板#83)
-库#85"
+的#134""(库#131,在位置#133)
+回答模板2#135"我不知道%名词在哪里"(,)
+的#136""(在位置#133,回答模板2#135)
+回答模板#137"%名词是什么?"(,)
+的#138""(在位置#133,回答模板#137)
+库#139"
 
 回答有什么:...
 操作0:...
 
 
 "(,)
-的#86""(有#53,库#85)
-回答有什么#87"\"\"\"
+的#140""(有#71,库#139)
+回答有什么#141"\"\"\"
 回答模板::%主语有%内容
 回答模板2::%主语没有任何东西
 
@@ -5207,8 +5918,8 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 
 
 "(,)
-的#88""(库#85,回答有什么#87)
-操作0#89"\"\"\"
+的#142""(库#139,回答有什么#141)
+操作0#143"\"\"\"
 回答模板::%主语中已经有%宾语了. 咱暂时不能理解为什么不同的东西会有同样的名字
 
 \"\"\"
@@ -5224,14 +5935,14 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
         ->+[.]\"主语\"(+[模板文本],+[标题]#0)->+[.]\"宾语\"(+[模板文本],+[标题]#1),
     ->+的(_主语,+性质)->[m_name](_名词,+性质)
 "(,)
-的#90""(库#85,操作0#89)
-回答模板#91"%主语中已经有%宾语了. 咱暂时不能理解为什么不同的东西会有同样的名字"(,)
-的#92""(操作0#89,回答模板#91)
-回答模板#93"%主语有%内容"(,)
-的#94""(回答有什么#87,回答模板#93)
-回答模板2#95"%主语没有任何东西"(,)
-的#96""(回答有什么#87,回答模板2#95)
-库#97"记住\"自然语言\"
+的#144""(库#139,操作0#143)
+回答模板#145"%主语中已经有%宾语了. 咱暂时不能理解为什么不同的东西会有同样的名字"(,)
+的#146""(操作0#143,回答模板#145)
+回答模板#147"%主语有%内容"(,)
+的#148""(回答有什么#141,回答模板#147)
+回答模板2#149"%主语没有任何东西"(,)
+的#150""(回答有什么#141,回答模板2#149)
+库#151"记住\"自然语言\"
 
 回答什么:...
 没有性质:...
@@ -5241,8 +5952,8 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 
 
 "(,)
-的#98""(是#51,库#97)
-没有性质#99"\"\"\"
+的#152""(是#69,库#151)
+没有性质#153"\"\"\"
 回答模板::%名词0没有\"%名词1\"这个性质
 
 \"\"\"
@@ -5260,8 +5971,8 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 }
 
 "(,)
-的#100""(库#97,没有性质#99)
-回答什么#101"\"\"\"
+的#154""(库#151,没有性质#153)
+回答什么#155"\"\"\"
 回答模板::%名词0是%名词1
 回答模板2::%名词0... 嗯... 是%名词1
 
@@ -5288,14 +5999,40 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
     ->+[模板文本](,说)->+[code](+[模板文本],回答模板)...
         ->+[.]\"名词0\"(+[模板文本],+[标题]#0)->+[.]\"名词1\"(+[模板文本],_主语)
 }"(,)
-的#102""(库#97,回答什么#101)
-回答模板#103"%名词0是%名词1"(,)
-的#104""(回答什么#101,回答模板#103)
-回答模板2#105"%名词0... 嗯... 是%名词1"(,)
-的#106""(回答什么#101,回答模板2#105)
-回答模板#107"%名词0没有\"%名词1\"这个性质"(,)
-的#108""(没有性质#99,回答模板#107)
-保存#109"\"\"\"
+的#156""(库#151,回答什么#155)
+回答模板#157"%名词0是%名词1"(,)
+的#158""(回答什么#155,回答模板#157)
+回答模板2#159"%名词0... 嗯... 是%名词1"(,)
+的#160""(回答什么#155,回答模板2#159)
+回答模板#161"%名词0没有\"%名词1\"这个性质"(,)
+的#162""(没有性质#153,回答模板#161)
+库#163""(,)
+的#164""(显示#67,库#163)
+新窗口#165""(网页画板,)
+的#166""(显示#67,新窗口#165)
+回答模板2#167"%网页画板"(,)
+的#168""(显示#67,回答模板2#167)
+回答模板1#169"%三维画板"(,)
+的#170""(显示#67,回答模板1#169)
+m_compiler#171""(,compiler)
+的#172""(新窗口#165,m_compiler#171)
+m_port#173""(,端口)
+的#174""(新窗口#165,m_port#173)
+m_event#175""(,event)
+的#176""(新窗口#165,m_event#175)
+m_readPtr#177""(,)
+的#178""(新窗口#165,m_readPtr#177)
+m_cursor#179"145751,145756"(,)
+的#180""(新窗口#165,m_cursor#179)
+m_x#181"958"(,)
+的#182""(新窗口#165,m_x#181)
+m_y#183"38"(,)
+的#184""(新窗口#165,m_y#183)
+m_height#185"476"(,)
+的#186""(新窗口#165,m_height#185)
+m_width#187"961"(,)
+的#188""(新窗口#165,m_width#187)
+保存#189"\"\"\"
 
 保存:...
 
@@ -5314,7 +6051,7 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
     },
     ->+[修改内容]\"你的名字是?\"(,说)->+的(Nini,+聊天者)->+询问(Nini,+聊天者)
 "(,)
-的#110""(你好#41,保存#109)
+的#190""(你好#59,保存#189)
 
 </st>
 
@@ -5381,13 +6118,19 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 &#x1f603
 -->
 
-<h1 id='Nini_face'>Nini: &#x1f603</h1>
+<h1 id='Nini_face'>Nini: 
+<span onmousedown="changeWnd('')">&#x1f603</span>
+</h1>
 
 <div id="chat_history" class="window history">
 
-<div class="chat-bubble Nini" onmousedown="changeWnd(1)">
+<!--
++[H函数](,Nini聊天框)
+-->
+
+<div class="chat-bubble Nini">
     <div class="talktext">
-你好! 点击这里可以切换屏幕
+你好! 点击<span onmousedown="changeWnd('')">&#x1f603</span>, 可以返回聊天窗口
     </div>
 </div>
 
@@ -5397,10 +6140,10 @@ ans=[pt[0]+dr[0],pt[1]+dr[1]];
 +[H函数](,Nini聊天框)
 -->
 
-<div id="draw_window" class="window draw" onmousedown="changeWnd(1)">
+<div id="draw_window" class="window draw">
 <svg width=100%  viewBox="0 0 1000 1000" id='display_window'></svg>
 </div>
-
+<div id="world_3d_scene" class="window history" display="none"></div>
 
 <br>
 
@@ -5417,6 +6160,7 @@ var face_bad='&#x1f623';
 var face_happy='&#x1f603';
 
 Nini.init(st_core.textContent);
+//Nini.init(st_core.innerHTML);
 var pt_Nini=Nini.m_self;
 var echo_sent=[];
 
@@ -5428,13 +6172,8 @@ window.addEventListener("keydown", function (event) {
   }
 
   switch (event.key) {
-    case "Left": // IE/Edge specific value
-    case "ArrowLeft":
-      changeWnd(-1);
-      break;
-    case "Right": // IE/Edge specific value
-    case "ArrowRight":
-      changeWnd(1);
+    case "Escape":
+      changeWnd('');
       break;
     default:
       return; // Quit when this doesn't handle the key event.
@@ -5455,15 +6194,27 @@ edit_box.addEventListener("keydown", function (event) {
 
 
 function changeWnd(i) {
-    show_index+=i;
-    show_index=(show_index)%2;
+    if(i==='') {
+        show_index=0;
+    }
+    else {
+        show_index+=i;
+    }
+    show_index=(show_index)%3;
     if(show_index==0) {
         chat_history.style.display="block";
+        draw_window.style.display="none";
+        world_3d_scene.style.display="none";
+    }
+    else if(show_index==1) {
+        world_3d_scene.style.display="block";
+        chat_history.style.display="none";
         draw_window.style.display="none";
     }
     else {
         chat_history.style.display="none";
         draw_window.style.display="block";
+        world_3d_scene.style.display="none";
     }
 }
 
@@ -5473,13 +6224,33 @@ function talkToNini(code) {
 }
 
 function updateChatHistory(code,speaker='me') {
+    if(code==='%三维画板') {
     chat_history.innerHTML+=`
+<div class="chat-bubble ${speaker}">
+    <div class="talktext">
+<span onmousedown='changeWnd(1)'><b><u>点击这里</u></b></span>
+    </div>
+</div>
+`;
+    }
+    else if(code==='%网页画板') {
+        chat_history.innerHTML+=`
+<div class="chat-bubble ${speaker}">
+    <div class="talktext">
+<span onmousedown='changeWnd(2)'><b><u>点击这里</u></b></span>
+    </div>
+</div>
+`;
+    }
+    else {
+        chat_history.innerHTML+=`
 <div class="chat-bubble ${speaker}">
     <div class="talktext">
 ${code}
     </div>
 </div>
 `;
+    }
 
     chat_history.scrollTop = chat_history.scrollHeight;
 
@@ -5488,7 +6259,7 @@ ${code}
 function runCode_Nini(code) {
     understandHear(code)
     Nini.do('+[自我意识](Nini,)->+[更新意境](Nini,)',pt_Nini);
-    if(Nini.m_speak.m_text!='') {
+    if(Nini.m_speak.m_text!=='') {
         updateChatHistory(Nini.m_speak.m_text,speaker='Nini');
         Nini.m_speak.m_text='';
     }
@@ -5522,24 +6293,88 @@ function understandHear(code) {
 
 }
 
-talkToNini('按左右箭头也可以切换屏幕');
-talkToNini('没关系, 不是对你说的');
-talkToNini('显示B0');
-talkToNini('B0是圆形"50"');
-talkToNini('B0有什么');
-talkToNini('B0的半径是什么');
-talkToNini('B0在"100,100"');
-talkToNini('C0是圆形"20"');
-talkToNini('C0距离B0为"10,10"');
-talkToNini('C0的半径是"35"');
 
+world_3D.init('world_3d_scene');
+animate_3D();
+changeWnd(0);
+
+
+talkToNini('车身是立方体（300,100,100）');
+talkToNini('前轮1是圆柱体(20,20)');
+talkToNini('前轮2是圆柱体(20,20)');
+talkToNini('后轮2是圆柱体(20,20)');
+talkToNini('后轮1是圆柱体(20,20)');
+
+talkToNini('车身在"0,65,-100"');
+talkToNini('前轮1距离车身为(100,-45,-50)');
+talkToNini('前轮2距离前轮1为(0,0,100)');
+talkToNini('前轮1朝向(0,90,0)');
+talkToNini('前轮2朝向(0,90,0)');
+
+talkToNini('后轮2距离前轮2为(-200,0,0)');
+talkToNini('后轮1距离前轮1为(-200,0,0)');
+talkToNini('后轮1朝向(0,90,0)');
+talkToNini('后轮2朝向(0,90,0)');
+
+talkToNini('有公交车');
+talkToNini('公交车有车身');
+talkToNini('公交车有前轮1');
+talkToNini('公交车有前轮2');
+talkToNini('公交车有后轮1');
+talkToNini('公交车有后轮2');
+
+
+
+talkToNini('驾驶舱是球体(50)');
+talkToNini('浮游泡1是球体(30)');
+talkToNini('浮游泡2是球体(30)');
+talkToNini('浮游泡3是球体(30)');
+talkToNini('浮游泡4是球体(30)');
+talkToNini('船体是圆柱体(150,30)');
+
+talkToNini('驾驶舱在(200,350,0)');
+talkToNini('船体距离驾驶舱为(0,-20/2,0)');
+talkToNini('浮游泡1距离船体为(80,-20,0)');
+talkToNini('浮游泡2距离船体为(-80,-20,0)');
+talkToNini('浮游泡3距离船体为(0,-20,80)');
+talkToNini('浮游泡4距离船体为(0,-20,-80)');
+
+talkToNini('绕船体, 浮游泡1沿Y方向旋转"33"');
+talkToNini('绕船体, 浮游泡2沿Y方向旋转"33"');
+talkToNini('绕船体, 浮游泡3沿Y方向旋转"33"');
+talkToNini('绕船体, 浮游泡4沿Y方向旋转"33"');
+
+
+
+talkToNini('头是球体(5)');
+talkToNini('身子是立方体(7,25,15)');
+talkToNini('手臂1是立方体(4,30,4)');
+talkToNini('手臂2是立方体(4,30,4)');
+talkToNini('腿1是立方体(6,30,6)');
+talkToNini('腿2是立方体(6,30,6)');
+
+talkToNini('头距离船体为(0,-100,0)');
+talkToNini('身子距离头为(0,-25/2-5,0)');
+talkToNini('手臂1距离身子为(0,25/2-30/2-1,15/2+6/2+1)');
+talkToNini('手臂2距离手臂1为(0,0,-15-6-2)');
+talkToNini('腿1距离身子为(0,-25/2-30/2-1,15/4)');
+talkToNini('腿2距离腿1为(0,0,-15/2)');
+
+
+
+talkToNini('有相机');
+talkToNini('相机朝向头');
+
+
+talkToNini('显示三维画板');
 
 
 </script>
 
 
 <!--
-lement
+ESC
+你好!
 Nini, 打开网页画板(文件)
 Nini本体(核心结构):...
 +[新建阅读窗口](,Nini本体)
