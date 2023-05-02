@@ -95,8 +95,8 @@ body {
 <polygon id="line_an_3" points="103.511367108646, 346.85518413890486 235.4995492494022, 411.44514561204096" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
 <polygon id="line_an_2" points="235.4995492494022, 411.44514561204096 940.8340845843295, 293.88938972288634 59.165915415670455, 440.8340845843295" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
 <polygon id="line_an_1" points="235.4995492494022, 411.44514561204096 499.99999999999994, 146.94469486144317 646.9446948614432, 0.0" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_4" onmousedown="loadDragFunc('pt_4')" cx="940.8340845843295" cy="293.88938972288634" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_5" onmousedown="loadDragFunc('pt_5')" cx="59.165915415670455" cy="440.8340845843295" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
+<circle id="pt_4" onclick="loadDragFunc('pt_4')" cx="940.8340845843295" cy="293.88938972288634" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
+<circle id="pt_5" onclick="loadDragFunc('pt_5')" cx="59.165915415670455" cy="440.8340845843295" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
 <circle id="pt_1" onmousedown="loadDragFunc('pt_1')" cx="103.511367108646" cy="346.85518413890486" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
 <circle id="pt_6" onmousedown="loadDragFunc('pt_6')" cx="235.4995492494022" cy="411.44514561204096" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
 <circle id="pt_2" onmousedown="loadDragFunc('pt_2')" cx="499.99999999999994" cy="146.94469486144317" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
@@ -264,7 +264,9 @@ function dragEle(e,name) {
     draw_update();
 }
 
-let doAction=function (e) {};
+
+// let doAction=function (e) {};
+let doAction=function (e) {dragEle(e,'pt_4')};
 function onmousedown_diy(e) {
     doAction(e);
 }
