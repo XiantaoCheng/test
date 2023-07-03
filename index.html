@@ -7,6 +7,12 @@ LaTeX数学记号::https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
 
 <html>
   <head>
+<!--code-->
+<link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 %[结构语言核心JS]
@@ -86,614 +92,69 @@ body {
 <div class="content">
     <p><mathjax style=\"font-size:1.5em\">
 <!--
-+[H函数](,代码)
++[H函数](,计算折射率)
+参考::https://baike.baidu.com/item/%E4%B8%80%E5%85%83%E4%B8%89%E6%AC%A1%E6%96%B9%E7%A8%8B%E6%B1%82%E6%A0%B9%E5%85%AC%E5%BC%8F/10721952
++[打开网页](,参考)
+
++[上传临时网页](,计算折射率)
 -->
 
+<h2>Refractive index</h2>
+The response matrix is,
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{1}$$
+$$-i \omega \vec{j_{1}}+v_{x} i k \vec{j_{1}}+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{2}$$
+$$\vec{F}=q n_{e} \vec{E}\tag{3}$$
+$$\left(\left(-i \omega+v_{x} i k\right) \mathbf{I}+\mathbf{T}\right) \vec{j_{1}}=q n_{e} \vec{E}\tag{4}$$
+$$\vec{j_{1}}=q n_{e} \mathbf{A}^{-1} \vec{E}\tag{4.1}$$
 
-<svg id="viewer" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1000 550.0" style="overflow: hidden;border: 2px solid #888888;"> 
+The wave equation is,
+$$\frac{\omega^{2}}{c^{2}} \vec{E}-\vec{k}^{2} \vec{E}+\left(\vec{k} \vec{k}\right)\cdot \vec{E}=-i \omega \mu_{0} \vec{j_{1}}\tag{5}$$
+$$\frac{\omega^{2}}{c^{2}} \vec{E}-\vec{k}^{2} \vec{E}+\left(\vec{k} \vec{k}\right)\cdot \vec{E}=-i \omega \mu_{0} q n_{e} \mathbf{A}^{-1} \vec{E}\tag{6}$$
 
-<polygon id="line_pt_7pt_11" points="621.6556018745052, 134.35240225918798 462.6264122284185, 360.5209843916635" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_20" onmousedown="loadDragFunc('pt_20')" cx="556.077355562068" cy="319.4262643249024" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_16" onmousedown="loadDragFunc('pt_16')" cx="502.25299295583557" cy="322.25912551470407" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_10" onmousedown="loadDragFunc('pt_10')" cx="562.4512932391217" cy="247.89651928240943" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_6" onmousedown="loadDragFunc('pt_6')" cx="488.7969023042775" cy="250.72938047221115" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_9" points="619.5344446858677, 225.3806277023576 621.9727439313388, 325.35089676666263 622.2775313370225, 337.84718039970073" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_7" points="534.6245054992347, 407.17301142986383 446.5712666934514, 359.7744129715583 435.5646118427284, 353.84958816427013" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_pt_14pt_22" points="621.9727439313388, 325.35089676666263 525.6329637191353, 298.54330924625424" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_8" points="556.077355562068, 319.4262643249024 622.2775313370225, 337.84718039970073 525.9377511248192, 311.0395928792924" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_pt_14pt_18" points="446.5712666934514, 359.7744129715583 525.6329637191353, 298.54330924625424" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_6" points="502.25299295583557, 322.25912551470407 435.5646118427284, 353.84958816427013 525.9377511248192, 311.0395928792924" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_5" points="621.6556018745052, 134.35240225918798 624.093901119976, 234.322671323493 624.3986885256598, 246.81895495653114" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_3" points="462.6264122284185, 360.5209843916635 428.82436021627007, 266.4071103891127 424.5991037147515, 254.64287613879378" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_pt_4pt_12" points="624.093901119976, 234.322671323493 524.1090266907161, 236.06189108106364" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_4" points="562.4512932391217, 247.89651928240943 624.3986885256598, 246.81895495653114 524.4138140964, 248.55817471410174" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_pt_4pt_8" points="428.82436021627007, 266.4071103891127 524.1090266907161, 236.06189108106364" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_2" points="488.7969023042775, 250.72938047221115 424.5991037147515, 254.64287613879378 524.4138140964, 248.55817471410174" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<polygon id="line_an_1" points="525.6329637191353, 298.54330924625424 525.9377511248192, 311.0395928792924 524.1090266907161, 236.06189108106364 524.4138140964, 248.55817471410174 526.33231306915, 327.2166325968571 523.4994518793483, 211.06932381498737" style="fill:rgb(0,0,0);stroke:black;stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_21" onmousedown="loadDragFunc('pt_21')" cx="619.5344446858677" cy="225.3806277023576" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_17" onmousedown="loadDragFunc('pt_17')" cx="534.6245054992347" cy="407.17301142986383" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_22" onmousedown="loadDragFunc('pt_22')" cx="621.9727439313388" cy="325.35089676666263" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_19" onmousedown="loadDragFunc('pt_19')" cx="622.2775313370225" cy="337.84718039970073" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_18" onmousedown="loadDragFunc('pt_18')" cx="446.5712666934514" cy="359.7744129715583" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_15" onmousedown="loadDragFunc('pt_15')" cx="435.5646118427284" cy="353.84958816427013" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_11" onmousedown="loadDragFunc('pt_11')" cx="621.6556018745052" cy="134.35240225918798" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_7" onmousedown="loadDragFunc('pt_7')" cx="462.6264122284185" cy="360.5209843916635" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_12" onmousedown="loadDragFunc('pt_12')" cx="624.093901119976" cy="234.322671323493" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_9" onmousedown="loadDragFunc('pt_9')" cx="624.3986885256598" cy="246.81895495653114" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_8" onmousedown="loadDragFunc('pt_8')" cx="428.82436021627007" cy="266.4071103891127" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_5" onmousedown="loadDragFunc('pt_5')" cx="424.5991037147515" cy="254.64287613879378" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_14" onmousedown="loadDragFunc('pt_14')" cx="525.6329637191353" cy="298.54330924625424" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_13" onmousedown="loadDragFunc('pt_13')" cx="525.9377511248192" cy="311.0395928792924" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_4" onmousedown="loadDragFunc('pt_4')" cx="524.1090266907161" cy="236.06189108106364" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_1" onmousedown="loadDragFunc('pt_1')" cx="524.4138140964" cy="248.55817471410174" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_2" onmousedown="loadDragFunc('pt_2')" cx="526.33231306915" cy="327.2166325968571" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
-<circle id="pt_3" onmousedown="loadDragFunc('pt_3')" cx="523.4994518793483" cy="211.06932381498737" r="10" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);stroke-width:5;fill-rule:evenodd;" />
+If we choose eigenvectors of matrix A, which is perpendicular to \(\vec{k}\), then all matrices in the equation will become a number,
+$$\frac{\omega^{2}}{c^{2}}-k^{2}=-i \omega \mu_{0} q n_{e}/\left(-i \omega+t_{i}\right)\tag{7}$$
+(Ignore v_x*k for simplification)
+$$\frac{\omega^{2}}{c^{2}}-k^{2}=-\frac{i \omega \mu_{0} q n_{e}}{-i \omega+t_{i}}\tag{8}$$
+$$1-n^{2}=\frac{c^{2}}{\omega^{2}} \frac{\omega \mu_{0} q n_{e}}{\omega+i t_{i}}\tag{9}$$
+$$n^{2}=1-\frac{c^{2}}{\omega^{2}} \frac{\omega \mu_{0} q n_{e}}{\omega+i t_{i}}\tag{10}$$
+$$n=\sqrt{1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{1}{1+i t_{i}/\omega}}\tag{11}$$
+$$n=\sqrt{1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{\omega^{2}-i t_{i} \omega}{\omega^{2}+t_{i}^{2}}}\tag{12}$$
+(There is a problem with this result)
 
+Now we re-consider the v_x*k term,
+$$n^{2}=1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{\omega}{\omega-v_{x} k+i t_{i}}\tag{13}$$
+$$n^{2}=1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{1}{1-\beta_{x} n+i t_{i}/\omega}\tag{14}$$
+$$n^{2} \left(1-\beta_{x} n+i t_{i}/\omega\right)=\left(1-\beta_{x} n+i t_{i}/\omega\right)-\frac{\omega_{p}^{2}}{\omega^{2}}\tag{15}$$
+$$-\beta_{x} n^{3}+\left(1+i t_{i}/\omega+\beta_{x}\right) n=\left(1+i t_{i}/\omega\right)-\frac{\omega_{p}^{2}}{\omega^{2}}\tag{16}$$
+$$n^{3}-\left(1+i t_{i}/\omega+\beta_{x}\right)/\beta_{x} n+\left(1+i t_{i}/\omega-\frac{\omega_{p}^{2}}{\omega^{2}}\right)/\beta_{x}=0\tag{17}$$
 
-</svg>
+One of the roots of a cubic equation is,
+$$n^{3}+p n+q=0\tag{18}$$
+$$n=\left(-\frac{q}{2}+\sqrt{\left(\frac{q}{2}\right)^{2}+\left(\frac{p}{3}\right)^{3}}\right)^{1/3}+\left(-\frac{q}{2}-\sqrt{\left(\frac{q}{2}\right)^{2}+\left(\frac{p}{3}\right)^{3}}\right)^{1/3}\tag{19}$$
 
+Here we have,
+$$p=-\left(1+i t_{i}/\omega+\beta_{x}\right)/\beta_{x}\tag{20}$$
+$$q=\left(1+i t_{i}/\omega-\frac{\omega_{p}^{2}}{\omega^{2}}\right)/\beta_{x}\tag{21}$$
 
 
 <!--
-图1(SVG):...
-JS代码(JS函数):...
-+[新建阅读窗口](,图1)
+[21].:
+式(19)转换为"Matlab"
+n^{3}-(1+i*t_i/\omega+\beta_x)/\beta_x*n+(1+i*t_i/\omega-\frac{\omega_p^{2}}{\omega^{2}})/\beta_x=0
+将"p=-(1+i*t_i/\omega+\beta_x)/\beta_x"记作为式(20)
+将"q=(1+i*t_i/\omega-\frac{\omega_p^{2}}{\omega^{2}})/\beta_x"记作为式(21)
+将式(5)记作为式(6)
+将式(4.1)代入到式(6)
 
-+[H函数](,代码)
+
+更新式(6)
+验证公式(M函数):...
++[H函数](,计算折射率)
 -->
     </mathjax></p>
 </div>
 
-<p id="cmd_window">Hello world!</p>
-<script>
-function print() {
-    document.getElementById("cmd_window").innerHTML+="<br>";
-    for (var i=0; i < arguments.length; i++) {
-        text=arguments[i];
-        document.getElementById("cmd_window").innerHTML+=" "+text;
-    }
-}
-</script>
-<script>
-/*
-+[J函数](,JS代码)
-*/
 
-
-function intersection_lines_dir_pt(pt1,theta1,pt2,theta2) {
-    X1=[pt1[0],pt1[0]+Math.cos(theta1)];
-    Y1=[pt1[1],pt1[1]+Math.sin(theta1)];
-    X2=[pt2[0],pt2[0]+Math.cos(theta2)];
-    Y2=[pt2[1],pt2[1]+Math.sin(theta2)];
-
-    D1=X1[0]*Y1[1]-X1[1]*Y1[0];
-    D2=X2[0]*Y2[1]-X2[1]*Y2[0];
-    DX1=X1[1]-X1[0];
-    DX2=X2[1]-X2[0];
-    DY1=Y1[1]-Y1[0];
-    DY2=Y2[1]-Y2[0];
-    x0=(D1*DX2-D2*DX1)/(DY1*DX2-DY2*DX1);
-    y0=(D1*DY2-D2*DY1)/(DY1*DX2-DY2*DX1);
-    return [x0,y0];
-}
-
-
-function joint_two_arms(pt_1,pt_2,L_1,L_2) {
-
-    x_1=pt_1[0];
-    y_1=pt_1[1];
-    x_2=pt_2[0];
-    y_2=pt_2[1];
-    
-    DX_1=x_1-x_2;
-    DY_1=y_1-y_2;
-    
-    D=L_1**2-(y_1-y_2)**2-(x_1-x_2)**2-L_2**2;
-    DX1=(-D*DX_1-Math.sqrt(4*L_2**2*DY_1**2*(DX_1**2+DY_1**2)-(D*DY_1)**2))/(2*(DX_1**2+DY_1**2));
-    DX2=(-D*DX_1+Math.sqrt(4*L_2**2*DY_1**2*(DX_1**2+DY_1**2)-(D*DY_1)**2))/(2*(DX_1**2+DY_1**2));
-    
-    x1=DX1+x_2;
-    x2=DX2+x_2;
-    
-    
-    DY1=Math.sqrt(L_2**2-DX1**2);
-    DY2=-Math.sqrt(L_2**2-DX2**2);
-    
-    y1=DY1+y_2;
-    y2=DY2+y_2;
-    
-    if (Math.abs(Math.sqrt((x1-x_1)**2+(y1-y_1)**2)-L_1)>1e-6) {
-        y1=-DY1+y_2;
-    }
-    
-    if (Math.abs(Math.sqrt((x2-x_1)**2+(y2-y_1)**2)-L_1)>1e-6) {
-        y2=-DY2+y_2;
-    }
-    
-    X_1=x1-x_1;
-    Y_1=y1-y_1;
-    X_2=x1-x_2;
-    Y_2=y1-y_2;
-    // test=cross([x1-x_1,y1-y_1,0],[x1-x_2,y1-y_2,0]);
-    test=X_1*Y_2-X_2*Y_1;
-    
-    if (x1===NaN) {
-        x1=0;
-    }
-    if (y1===NaN) {
-        y1=0;
-    }
-    
-    if (x2===NaN) {
-        x2=0;
-    }
-    if (y2===NaN) {
-        y2=0;
-    }
-
-    if (test<0) {
-        pt2=[x1,y1];
-        pt1=[x2,y2];
-    }
-    else {
-        pt1=[x1,y1];
-        pt2=[x2,y2];
-    }
-    
-    return [pt1,pt2]
-
-}
-
-
-
-
-function draw_update() {
-    var line_pt_7pt_11 = document.getElementById("line_pt_7pt_11");
-    var pt_20 = document.getElementById("pt_20");
-    var pt_20_x = +pt_20.getAttribute("cx");
-    var pt_20_y = +pt_20.getAttribute("cy");
-    
-    var pt_16 = document.getElementById("pt_16");
-    var pt_16_x = +pt_16.getAttribute("cx");
-    var pt_16_y = +pt_16.getAttribute("cy");
-    
-    var pt_10 = document.getElementById("pt_10");
-    var pt_10_x = +pt_10.getAttribute("cx");
-    var pt_10_y = +pt_10.getAttribute("cy");
-    
-    var pt_6 = document.getElementById("pt_6");
-    var pt_6_x = +pt_6.getAttribute("cx");
-    var pt_6_y = +pt_6.getAttribute("cy");
-    
-    var line_an_9 = document.getElementById("line_an_9");
-    var line_an_7 = document.getElementById("line_an_7");
-    var line_pt_14pt_22 = document.getElementById("line_pt_14pt_22");
-    var line_an_8 = document.getElementById("line_an_8");
-    var line_pt_14pt_18 = document.getElementById("line_pt_14pt_18");
-    var line_an_6 = document.getElementById("line_an_6");
-    var line_an_5 = document.getElementById("line_an_5");
-    var line_an_3 = document.getElementById("line_an_3");
-    var line_pt_4pt_12 = document.getElementById("line_pt_4pt_12");
-    var line_an_4 = document.getElementById("line_an_4");
-    var line_pt_4pt_8 = document.getElementById("line_pt_4pt_8");
-    var line_an_2 = document.getElementById("line_an_2");
-    var line_an_1 = document.getElementById("line_an_1");
-    var pt_21 = document.getElementById("pt_21");
-    var pt_21_x = +pt_21.getAttribute("cx");
-    var pt_21_y = +pt_21.getAttribute("cy");
-    
-    var pt_17 = document.getElementById("pt_17");
-    var pt_17_x = +pt_17.getAttribute("cx");
-    var pt_17_y = +pt_17.getAttribute("cy");
-    
-    var pt_22 = document.getElementById("pt_22");
-    var pt_22_x = +pt_22.getAttribute("cx");
-    var pt_22_y = +pt_22.getAttribute("cy");
-    
-    var pt_19 = document.getElementById("pt_19");
-    var pt_19_x = +pt_19.getAttribute("cx");
-    var pt_19_y = +pt_19.getAttribute("cy");
-    
-    var pt_18 = document.getElementById("pt_18");
-    var pt_18_x = +pt_18.getAttribute("cx");
-    var pt_18_y = +pt_18.getAttribute("cy");
-    
-    var pt_15 = document.getElementById("pt_15");
-    var pt_15_x = +pt_15.getAttribute("cx");
-    var pt_15_y = +pt_15.getAttribute("cy");
-    
-    var pt_11 = document.getElementById("pt_11");
-    var pt_11_x = +pt_11.getAttribute("cx");
-    var pt_11_y = +pt_11.getAttribute("cy");
-    
-    var pt_7 = document.getElementById("pt_7");
-    var pt_7_x = +pt_7.getAttribute("cx");
-    var pt_7_y = +pt_7.getAttribute("cy");
-    
-    var pt_12 = document.getElementById("pt_12");
-    var pt_12_x = +pt_12.getAttribute("cx");
-    var pt_12_y = +pt_12.getAttribute("cy");
-    
-    var pt_9 = document.getElementById("pt_9");
-    var pt_9_x = +pt_9.getAttribute("cx");
-    var pt_9_y = +pt_9.getAttribute("cy");
-    
-    var pt_8 = document.getElementById("pt_8");
-    var pt_8_x = +pt_8.getAttribute("cx");
-    var pt_8_y = +pt_8.getAttribute("cy");
-    
-    var pt_5 = document.getElementById("pt_5");
-    var pt_5_x = +pt_5.getAttribute("cx");
-    var pt_5_y = +pt_5.getAttribute("cy");
-    
-    var pt_14 = document.getElementById("pt_14");
-    var pt_14_x = +pt_14.getAttribute("cx");
-    var pt_14_y = +pt_14.getAttribute("cy");
-    
-    var pt_13 = document.getElementById("pt_13");
-    var pt_13_x = +pt_13.getAttribute("cx");
-    var pt_13_y = +pt_13.getAttribute("cy");
-    
-    var pt_4 = document.getElementById("pt_4");
-    var pt_4_x = +pt_4.getAttribute("cx");
-    var pt_4_y = +pt_4.getAttribute("cy");
-    
-    var pt_1 = document.getElementById("pt_1");
-    var pt_1_x = +pt_1.getAttribute("cx");
-    var pt_1_y = +pt_1.getAttribute("cy");
-    
-    var pt_2 = document.getElementById("pt_2");
-    var pt_2_x = +pt_2.getAttribute("cx");
-    var pt_2_y = +pt_2.getAttribute("cy");
-    
-    var pt_3 = document.getElementById("pt_3");
-    var pt_3_x = +pt_3.getAttribute("cx");
-    var pt_3_y = +pt_3.getAttribute("cy");
-    
-    
-    var L_20 = 100.0;var L_19 = 100.0;var L_18 = 12.5;var L_17 = 100.0;var L_16 = 100.0;var L_15 = 100.0;var L_14 = 12.5;var L_13 = 100.0;var L_12 = 87.5;var L_11 = 100.0;var L_10 = 100.0;var L_9 = 100.0;var L_8 = 12.5;var L_7 = 100.0;var L_6 = 100.0;var L_5 = 100.0;var L_4 = 12.5;var L_3 = 100.0;var L_2 = 25.0;var L_1 = 37.5;
-
-    // Line direction
-    Dx=pt_2_x-pt_3_x;
-    Dy=pt_2_y-pt_3_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_1=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_4
-    Dx=L_2*Math.cos(an_1);
-    Dy=L_2*Math.sin(an_1);
-    pt_4_x=pt_3_x+Dx;
-    pt_4_y=pt_3_y+Dy;
-    
-    // Solving coordinates of pt_1
-    Dx=L_1*Math.cos(an_1);
-    Dy=L_1*Math.sin(an_1);
-    pt_1_x=pt_3_x+Dx;
-    pt_1_y=pt_3_y+Dy;
-    
-    // Line direction
-    Dx=pt_10_x-pt_1_x;
-    Dy=pt_10_y-pt_1_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_4=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_9
-    Dx=L_7*Math.cos(an_4);
-    Dy=L_7*Math.sin(an_4);
-    pt_9_x=pt_1_x+Dx;
-    pt_9_y=pt_1_y+Dy;
-    
-    
-    [pt1,pt2]=joint_two_arms([pt_4_x,pt_4_y],[pt_9_x,pt_9_y],L_9,L_8);
-    pt_12_x=pt2[0];
-    pt_12_y=pt2[1];
-    // Line direction
-    Dx=pt_12_x-pt_9_x;
-    Dy=pt_12_y-pt_9_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_5=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_11
-    Dx=L_10*Math.cos(an_5);
-    Dy=L_10*Math.sin(an_5);
-    pt_11_x=pt_12_x+Dx;
-    pt_11_y=pt_12_y+Dy;
-    
-    // Line direction
-    Dx=pt_6_x-pt_1_x;
-    Dy=pt_6_y-pt_1_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_2=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_5
-    Dx=L_3*Math.cos(an_2);
-    Dy=L_3*Math.sin(an_2);
-    pt_5_x=pt_1_x+Dx;
-    pt_5_y=pt_1_y+Dy;
-    
-    
-    [pt1,pt2]=joint_two_arms([pt_4_x,pt_4_y],[pt_5_x,pt_5_y],L_5,L_4);
-    pt_8_x=pt2[0];
-    pt_8_y=pt2[1];
-    // Line direction
-    Dx=pt_8_x-pt_5_x;
-    Dy=pt_8_y-pt_5_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_3=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_7
-    Dx=L_6*Math.cos(an_3);
-    Dy=L_6*Math.sin(an_3);
-    pt_7_x=pt_8_x+Dx;
-    pt_7_y=pt_8_y+Dy;
-    
-    // Solving coordinates of pt_14
-    Dx=L_12*Math.cos(an_1);
-    Dy=L_12*Math.sin(an_1);
-    pt_14_x=pt_3_x+Dx;
-    pt_14_y=pt_3_y+Dy;
-    
-    // Solving coordinates of pt_13
-    Dx=L_11*Math.cos(an_1);
-    Dy=L_11*Math.sin(an_1);
-    pt_13_x=pt_3_x+Dx;
-    pt_13_y=pt_3_y+Dy;
-    
-    // Line direction
-    Dx=pt_20_x-pt_13_x;
-    Dy=pt_20_y-pt_13_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_8=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_19
-    Dx=L_17*Math.cos(an_8);
-    Dy=L_17*Math.sin(an_8);
-    pt_19_x=pt_13_x+Dx;
-    pt_19_y=pt_13_y+Dy;
-    
-    
-    [pt1,pt2]=joint_two_arms([pt_14_x,pt_14_y],[pt_19_x,pt_19_y],L_19,L_18);
-    pt_22_x=pt2[0];
-    pt_22_y=pt2[1];
-    // Line direction
-    Dx=pt_22_x-pt_19_x;
-    Dy=pt_22_y-pt_19_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_9=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_21
-    Dx=L_20*Math.cos(an_9);
-    Dy=L_20*Math.sin(an_9);
-    pt_21_x=pt_22_x+Dx;
-    pt_21_y=pt_22_y+Dy;
-    
-    // Line direction
-    Dx=pt_16_x-pt_13_x;
-    Dy=pt_16_y-pt_13_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_6=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_15
-    Dx=L_13*Math.cos(an_6);
-    Dy=L_13*Math.sin(an_6);
-    pt_15_x=pt_13_x+Dx;
-    pt_15_y=pt_13_y+Dy;
-    
-    
-    [pt1,pt2]=joint_two_arms([pt_14_x,pt_14_y],[pt_15_x,pt_15_y],L_15,L_14);
-    pt_18_x=pt2[0];
-    pt_18_y=pt2[1];
-    // Line direction
-    Dx=pt_18_x-pt_15_x;
-    Dy=pt_18_y-pt_15_y;
-    L=Math.sqrt(Dx**2+Dy**2);
-    Dx=Dx/L;
-    Dy=Dy/L;
-    an_7=Math.acos(Dx)*Math.sign(Dy);
-    
-    // Solving coordinates of pt_17
-    Dx=L_16*Math.cos(an_7);
-    Dy=L_16*Math.sin(an_7);
-    pt_17_x=pt_18_x+Dx;
-    pt_17_y=pt_18_y+Dy;
-    
-    
-
-    xs=[pt_11_x, pt_7_x];
-    ys=[pt_11_y, pt_7_y];
-    for(var i=0;i<line_pt_7pt_11.points.length;i++) {
-        line_pt_7pt_11.points[i].x=xs[i];
-        line_pt_7pt_11.points[i].y=ys[i];
-    }
-    
-    pt_20.setAttribute("cx",pt_20_x);
-    pt_20.setAttribute("cy",pt_20_y);
-    pt_16.setAttribute("cx",pt_16_x);
-    pt_16.setAttribute("cy",pt_16_y);
-    pt_10.setAttribute("cx",pt_10_x);
-    pt_10.setAttribute("cy",pt_10_y);
-    pt_6.setAttribute("cx",pt_6_x);
-    pt_6.setAttribute("cy",pt_6_y);
-    xs=[pt_21_x, pt_22_x, pt_19_x];
-    ys=[pt_21_y, pt_22_y, pt_19_y];
-    for(var i=0;i<line_an_9.points.length;i++) {
-        line_an_9.points[i].x=xs[i];
-        line_an_9.points[i].y=ys[i];
-    }
-    
-    xs=[pt_17_x, pt_18_x, pt_15_x];
-    ys=[pt_17_y, pt_18_y, pt_15_y];
-    for(var i=0;i<line_an_7.points.length;i++) {
-        line_an_7.points[i].x=xs[i];
-        line_an_7.points[i].y=ys[i];
-    }
-    
-    xs=[pt_22_x, pt_14_x];
-    ys=[pt_22_y, pt_14_y];
-    for(var i=0;i<line_pt_14pt_22.points.length;i++) {
-        line_pt_14pt_22.points[i].x=xs[i];
-        line_pt_14pt_22.points[i].y=ys[i];
-    }
-    
-    xs=[pt_20_x, pt_19_x, pt_13_x];
-    ys=[pt_20_y, pt_19_y, pt_13_y];
-    for(var i=0;i<line_an_8.points.length;i++) {
-        line_an_8.points[i].x=xs[i];
-        line_an_8.points[i].y=ys[i];
-    }
-    
-    xs=[pt_18_x, pt_14_x];
-    ys=[pt_18_y, pt_14_y];
-    for(var i=0;i<line_pt_14pt_18.points.length;i++) {
-        line_pt_14pt_18.points[i].x=xs[i];
-        line_pt_14pt_18.points[i].y=ys[i];
-    }
-    
-    xs=[pt_16_x, pt_15_x, pt_13_x];
-    ys=[pt_16_y, pt_15_y, pt_13_y];
-    for(var i=0;i<line_an_6.points.length;i++) {
-        line_an_6.points[i].x=xs[i];
-        line_an_6.points[i].y=ys[i];
-    }
-    
-    xs=[pt_11_x, pt_12_x, pt_9_x];
-    ys=[pt_11_y, pt_12_y, pt_9_y];
-    for(var i=0;i<line_an_5.points.length;i++) {
-        line_an_5.points[i].x=xs[i];
-        line_an_5.points[i].y=ys[i];
-    }
-    
-    xs=[pt_7_x, pt_8_x, pt_5_x];
-    ys=[pt_7_y, pt_8_y, pt_5_y];
-    for(var i=0;i<line_an_3.points.length;i++) {
-        line_an_3.points[i].x=xs[i];
-        line_an_3.points[i].y=ys[i];
-    }
-    
-    xs=[pt_12_x, pt_4_x];
-    ys=[pt_12_y, pt_4_y];
-    for(var i=0;i<line_pt_4pt_12.points.length;i++) {
-        line_pt_4pt_12.points[i].x=xs[i];
-        line_pt_4pt_12.points[i].y=ys[i];
-    }
-    
-    xs=[pt_10_x, pt_9_x, pt_1_x];
-    ys=[pt_10_y, pt_9_y, pt_1_y];
-    for(var i=0;i<line_an_4.points.length;i++) {
-        line_an_4.points[i].x=xs[i];
-        line_an_4.points[i].y=ys[i];
-    }
-    
-    xs=[pt_8_x, pt_4_x];
-    ys=[pt_8_y, pt_4_y];
-    for(var i=0;i<line_pt_4pt_8.points.length;i++) {
-        line_pt_4pt_8.points[i].x=xs[i];
-        line_pt_4pt_8.points[i].y=ys[i];
-    }
-    
-    xs=[pt_6_x, pt_5_x, pt_1_x];
-    ys=[pt_6_y, pt_5_y, pt_1_y];
-    for(var i=0;i<line_an_2.points.length;i++) {
-        line_an_2.points[i].x=xs[i];
-        line_an_2.points[i].y=ys[i];
-    }
-    
-    xs=[pt_14_x, pt_13_x, pt_4_x, pt_1_x, pt_2_x, pt_3_x];
-    ys=[pt_14_y, pt_13_y, pt_4_y, pt_1_y, pt_2_y, pt_3_y];
-    for(var i=0;i<line_an_1.points.length;i++) {
-        line_an_1.points[i].x=xs[i];
-        line_an_1.points[i].y=ys[i];
-    }
-    
-    pt_21.setAttribute("cx",pt_21_x);
-    pt_21.setAttribute("cy",pt_21_y);
-    pt_17.setAttribute("cx",pt_17_x);
-    pt_17.setAttribute("cy",pt_17_y);
-    pt_22.setAttribute("cx",pt_22_x);
-    pt_22.setAttribute("cy",pt_22_y);
-    pt_19.setAttribute("cx",pt_19_x);
-    pt_19.setAttribute("cy",pt_19_y);
-    pt_18.setAttribute("cx",pt_18_x);
-    pt_18.setAttribute("cy",pt_18_y);
-    pt_15.setAttribute("cx",pt_15_x);
-    pt_15.setAttribute("cy",pt_15_y);
-    pt_11.setAttribute("cx",pt_11_x);
-    pt_11.setAttribute("cy",pt_11_y);
-    pt_7.setAttribute("cx",pt_7_x);
-    pt_7.setAttribute("cy",pt_7_y);
-    pt_12.setAttribute("cx",pt_12_x);
-    pt_12.setAttribute("cy",pt_12_y);
-    pt_9.setAttribute("cx",pt_9_x);
-    pt_9.setAttribute("cy",pt_9_y);
-    pt_8.setAttribute("cx",pt_8_x);
-    pt_8.setAttribute("cy",pt_8_y);
-    pt_5.setAttribute("cx",pt_5_x);
-    pt_5.setAttribute("cy",pt_5_y);
-    pt_14.setAttribute("cx",pt_14_x);
-    pt_14.setAttribute("cy",pt_14_y);
-    pt_13.setAttribute("cx",pt_13_x);
-    pt_13.setAttribute("cy",pt_13_y);
-    pt_4.setAttribute("cx",pt_4_x);
-    pt_4.setAttribute("cy",pt_4_y);
-    pt_1.setAttribute("cx",pt_1_x);
-    pt_1.setAttribute("cy",pt_1_y);
-    pt_2.setAttribute("cx",pt_2_x);
-    pt_2.setAttribute("cy",pt_2_y);
-    pt_3.setAttribute("cx",pt_3_x);
-    pt_3.setAttribute("cy",pt_3_y);
-    
-}
-
-var viewer = document.getElementById("viewer");
-var ratio_viewer=viewer.getBoundingClientRect().width/1000;
-
-function dragEle(e,name) {
-    var x=(e.clientX-viewer.getBoundingClientRect().left)/ratio_viewer;
-    var y=(e.clientY-viewer.getBoundingClientRect().top)/ratio_viewer;
-
-    var pt_1 = document.getElementById(name);
-    pt_1.setAttribute("cx", x);
-    pt_1.setAttribute("cy", y);
-
-    draw_update();
-}
-
-let doAction=function (e) {};
-function onmousedown_diy(e) {
-    doAction(e);
-}
-
-document.body.addEventListener("mousemove", onmousedown_diy);
-
-document.body.addEventListener("mouseup", function(e) {
-    doAction=function(e) {};
-});
-
-function loadDragFunc(name) {
-    doAction=function(e) {dragEle(e,name)};
-}
-
-
-/*
-+[J函数](,JS代码)
-*/
-</script>
 
 <div class="footer">
   <p>Footer</p>
