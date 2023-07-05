@@ -92,64 +92,176 @@ body {
 <div class="content">
     <p><mathjax style=\"font-size:1.5em\">
 <!--
-+[H函数](,计算折射率)
-参考::https://baike.baidu.com/item/%E4%B8%80%E5%85%83%E4%B8%89%E6%AC%A1%E6%96%B9%E7%A8%8B%E6%B1%82%E6%A0%B9%E5%85%AC%E5%BC%8F/10721952
-+[打开网页](,参考)
++[H函数](,讨论散度项)
++[上传临时网页](,讨论散度项)
 
-+[上传临时网页](,计算折射率)
+受力项特征:...
+
++[新建阅读窗口](,受力项特征)
 -->
 
-<h2>Refractive index</h2>
-The response matrix is,
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{1}$$
-$$-i \omega \vec{j_{1}}+v_{x} i k \vec{j_{1}}+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{2}$$
-$$\vec{F}=q n_{e} \vec{E}\tag{3}$$
-$$\left(\left(-i \omega+v_{x} i k\right) \mathbf{I}+\mathbf{T}\right) \vec{j_{1}}=q n_{e} \vec{E}\tag{4}$$
-$$\vec{j_{1}}=q n_{e} \mathbf{A}^{-1} \vec{E}\tag{4.1}$$
+<h2>Density wave</h2>
+Let's discuss effects of the density wave term. We will start from uniform flows,
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{\nabla}\cdot \vec{j_{1}}\right) \vec{v_{0}}=\vec{F}\tag{1}$$
+According to the approximation condition,
+$$\vec{\nabla} j_{i}\approx \frac{\partial j_{i}}{\partial z}\tag{2}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{z} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\left(\frac{\partial j_{z}}{\partial z}\right) \vec{v_{0}}=\vec{F}\tag{3}$$
+(Not necessary)<br>
+Then in frequency domain, it is,
+$$-i \omega \vec{j_{1}}+\left(\vec{v_{0}}\cdot i \vec{k}\right) \vec{j_{1}}+\left(i \vec{k}\cdot \vec{j_{1}}\right) \vec{v_{0}}=\vec{F}\tag{4}$$
+$$-\omega \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{k}\right) \vec{j_{1}}+\left(\vec{v_{0}} \vec{k}\right)\cdot \vec{j_{1}}=\vec{F}\tag{5}$$
+$$-\vec{j_{1}}+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \vec{j_{1}}+\frac{n}{c} \left(\vec{v_{0}} \hat{k}\right)\cdot \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{6}$$
 
-The wave equation is,
-$$\frac{\omega^{2}}{c^{2}} \vec{E}-\vec{k}^{2} \vec{E}+\left(\vec{k} \vec{k}\right)\cdot \vec{E}=-i \omega \mu_{0} \vec{j_{1}}\tag{5}$$
-$$\frac{\omega^{2}}{c^{2}} \vec{E}-\vec{k}^{2} \vec{E}+\left(\vec{k} \vec{k}\right)\cdot \vec{E}=-i \omega \mu_{0} q n_{e} \mathbf{A}^{-1} \vec{E}\tag{6}$$
+Assume that the wave vector is along the z-axis. We can define the following matrix,
+$$\mathbf{T}=\left(-1+\frac{v_{z} n}{c}\right) \mathbf{I}+\frac{n}{c} \left(\vec{v_{0}} \hat{k}\right)\tag{7}$$
+$$\mathbf{I}=\begin{pmatrix}
+1&0&0\\ 0&1&0\\ 0&0&1
+\end{pmatrix}
 
-If we choose eigenvectors of matrix A, which is perpendicular to \(\vec{k}\), then all matrices in the equation will become a number,
-$$\frac{\omega^{2}}{c^{2}}-k^{2}=-i \omega \mu_{0} q n_{e}/\left(-i \omega+t_{i}\right)\tag{7}$$
-(Ignore v_x*k for simplification)
-$$\frac{\omega^{2}}{c^{2}}-k^{2}=-\frac{i \omega \mu_{0} q n_{e}}{-i \omega+t_{i}}\tag{8}$$
-$$1-n^{2}=\frac{c^{2}}{\omega^{2}} \frac{\omega \mu_{0} q n_{e}}{\omega+i t_{i}}\tag{9}$$
-$$n^{2}=1-\frac{c^{2}}{\omega^{2}} \frac{\omega \mu_{0} q n_{e}}{\omega+i t_{i}}\tag{10}$$
-$$n=\sqrt{1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{1}{1+i t_{i}/\omega}}\tag{11}$$
-$$n=\sqrt{1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{\omega^{2}-i t_{i} \omega}{\omega^{2}+t_{i}^{2}}}\tag{12}$$
-(There is a problem with this result)
+\tag{8}$$
+$$\vec{v_{0}} \vec{k}=\begin{pmatrix}
+0&0&v_{x}\\ 0&0&v_{y}\\ 0&0&v_{z}
+\end{pmatrix}
 
-Now we re-consider the v_x*k term,
-$$n^{2}=1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{\omega}{\omega-v_{x} k+i t_{i}}\tag{13}$$
-$$n^{2}=1-\frac{\omega_{p}^{2}}{\omega^{2}} \frac{1}{1-\beta_{x} n+i t_{i}/\omega}\tag{14}$$
-$$n^{2} \left(1-\beta_{x} n+i t_{i}/\omega\right)=\left(1-\beta_{x} n+i t_{i}/\omega\right)-\frac{\omega_{p}^{2}}{\omega^{2}}\tag{15}$$
-$$-\beta_{x} n^{3}+\left(1+i t_{i}/\omega+\beta_{x}\right) n=\left(1+i t_{i}/\omega\right)-\frac{\omega_{p}^{2}}{\omega^{2}}\tag{16}$$
-$$n^{3}-\left(1+i t_{i}/\omega+\beta_{x}\right)/\beta_{x} n+\left(1+i t_{i}/\omega-\frac{\omega_{p}^{2}}{\omega^{2}}\right)/\beta_{x}=0\tag{17}$$
+\tag{9}$$
+$$\mathbf{T}=\left(-1+\frac{v_{z} n}{c}\right) \begin{pmatrix}
+1&0&0\\ 0&1&0\\ 0&0&1
+\end{pmatrix}
 
-One of the roots of a cubic equation is,
-$$n^{3}+p n+q=0\tag{18}$$
-$$n=\left(-\frac{q}{2}+\sqrt{\left(\frac{q}{2}\right)^{2}+\left(\frac{p}{3}\right)^{3}}\right)^{1/3}+\left(-\frac{q}{2}-\sqrt{\left(\frac{q}{2}\right)^{2}+\left(\frac{p}{3}\right)^{3}}\right)^{1/3}\tag{19}$$
++\frac{n}{c} \begin{pmatrix}
+0&0&v_{x}\\ 0&0&v_{y}\\ 0&0&v_{z}
+\end{pmatrix}
 
-Here we have,
-$$p=-\left(1+i t_{i}/\omega+\beta_{x}\right)/\beta_{x}\tag{20}$$
-$$q=\left(1+i t_{i}/\omega-\frac{\omega_{p}^{2}}{\omega^{2}}\right)/\beta_{x}\tag{21}$$
+\tag{10}$$
+$$\mathbf{T}=\begin{pmatrix}
+\left(-1+\frac{v_{z} n}{c}\right)&0&\frac{n}{c} v_{x}\\ 0&\left(-1+\frac{v_{z} n}{c}\right)&\frac{n}{c} v_{y}\\ 0&0&\left(-1+\frac{v_{z} n}{c}\right)+\frac{n}{c} v_{z}
+\end{pmatrix}
+
+\tag{11}$$
+
+Then eigenvalues are,
+$$\left|\mathbf{T}\right|=0\tag{12}$$
+$$\left(\left(-1+\frac{v_{z} n}{c}\right)\right) \left(\left(-1+\frac{v_{z} n}{c}\right)+\frac{n}{c} v_{z}\right) \left(\left(-1+\frac{v_{z} n}{c}\right)\right)=0\tag{13}$$
+$$\left(1-\frac{v_{z}}{c} n\right) \left(1-\frac{2 v_{z}}{c} n\right) \left(1-\frac{v_{z}}{c} n\right)=0\tag{14}$$
+
+<h2>Relativistic uniform flows</h2>
+The flow equation is,
+$$\frac{\partial}{\partial t}\left(\mathbf{M} \vec{j_{1}}\right)+\vec{p_{0}} \left(\vec{\nabla}\cdot \vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \mathbf{M} \vec{j_{1}}=\vec{F}\tag{15}$$
+$$-i \omega \mathbf{M} \vec{j_{1}}+\vec{p_{0}} \left(i \vec{k}\cdot \vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot i \vec{k}\right) \mathbf{M} \vec{j_{1}}=\vec{F}\tag{16}$$
+$$-\mathbf{M} \vec{j_{1}}+\frac{n}{c} \vec{p_{0}} \left(\hat{k}\cdot \vec{j_{1}}\right)+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \mathbf{M} \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{17}$$
+$$\left(-\mathbf{M}+\frac{n}{c} m \left(\vec{v_{0}} \hat{k}\right)+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \mathbf{M}\right) \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{18}$$
+
+The response function is, 
+$$\mathbf{T}=-\mathbf{M}+n \left(\vec{\beta} \hat{k}\right) m+n \left(\vec{\beta}\cdot \hat{k}\right) \mathbf{M}\tag{19}$$
+$$\mathbf{M}=\gamma m_{e} \left(\mathbf{I}+\gamma^{2} \vec{\beta} \vec{\beta}\right)\tag{20}$$
+
+Now the wave vector is along z-axis and the velocity is in the xy-plane, 
+$$\vec{\beta}=\begin{pmatrix}
+v_{x}/c,&v_{y}/c,&0
+\end{pmatrix}
+
+\tag{21}$$
+$$\hat{k}=\begin{pmatrix}
+1,&0,&0
+\end{pmatrix}
+
+\tag{22}$$
+
+The mass matrix is,
+$$\mathbf{M}=\gamma m_{e} \left(\begin{pmatrix}
+1+\gamma^{2} \left(v_{x}/c\right) \left(v_{x}/c\right)&\gamma^{2} \left(v_{x}/c\right) \left(v_{y}/c\right)&0\\ \gamma^{2} \left(v_{y}/c\right) \left(v_{x}/c\right)&1+\gamma^{2} \left(v_{y}/c\right) \left(v_{y}/c\right)&0\\ 0&0&1
+\end{pmatrix}
+
+\right)\tag{23}$$
+$$\mathbf{M}=m \begin{pmatrix}
+1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
+\end{pmatrix}
+
+\tag{24}$$
+
+The responce matrix is,
+$$\mathbf{T}=-\mathbf{M}+n \left(\begin{pmatrix}
+v_{x}/c&0&0\\ v_{y}/c&0&0\\ 0&0&0
+\end{pmatrix}
+
+\right) m+n \left(\begin{pmatrix}
+v_{x}/c,&v_{y}/c,&0
+\end{pmatrix}
+
+\cdot \begin{pmatrix}
+1,&0,&0
+\end{pmatrix}
+
+\right) \mathbf{M}\tag{25}$$
+$$\mathbf{T}=-m \begin{pmatrix}
+1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
+\end{pmatrix}
+
++n \left(\begin{pmatrix}
+v_{x}/c&0&0\\ v_{y}/c&0&0\\ 0&0&0
+\end{pmatrix}
+
+\right) m+n \beta_{x} m \begin{pmatrix}
+1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
+\end{pmatrix}
+
+\tag{26}$$
+$$\mathbf{T}=-\begin{pmatrix}
+m \left(1+\gamma^{2} \beta_{x}^{2}\right)&m \gamma^{2} \beta_{x} \beta_{y}&0\\ m \gamma^{2} \beta_{y} \beta_{x}&m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&m
+\end{pmatrix}
+
++\begin{pmatrix}
+n m v_{x}/c&0&0\\ n m v_{y}/c&0&0\\ 0&0&0
+\end{pmatrix}
+
++n \beta_{x} m \begin{pmatrix}
+1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
+\end{pmatrix}
+
+\tag{27}$$
+
+$$\mathbf{T}=\begin{pmatrix}
+n m v_{x}/c-m \left(1+\gamma^{2} \beta_{x}^{2}\right)&-m \gamma^{2} \beta_{x} \beta_{y}&0\\ n m v_{y}/c-m \gamma^{2} \beta_{y} \beta_{x}&-m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&-m
+\end{pmatrix}
+
++\begin{pmatrix}
+n \beta_{x} m \left(1+\gamma^{2} \beta_{x}^{2}\right)&n \beta_{x} m \gamma^{2} \beta_{x} \beta_{y}&0\\ n \beta_{x} m \gamma^{2} \beta_{y} \beta_{x}&n \beta_{x} m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&n \beta_{x} m
+\end{pmatrix}
+
+\tag{28}$$
+$$\mathbf{T}=\begin{pmatrix}
+n m v_{x}/c-m \left(1+\gamma^{2} \beta_{x}^{2}\right)+n \beta_{x} m \left(1+\gamma^{2} \beta_{x}^{2}\right)&-m \gamma^{2} \beta_{x} \beta_{y}+n \beta_{x} m \gamma^{2} \beta_{x} \beta_{y}&0\\ n m v_{y}/c-m \gamma^{2} \beta_{y} \beta_{x}+n \beta_{x} m \gamma^{2} \beta_{y} \beta_{x}&-m \left(1+\gamma^{2} \beta_{y}^{2}\right)+n \beta_{x} m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&-m+n \beta_{x} m
+\end{pmatrix}
+
+\tag{29}$$
+
+<h3>Examples</h3>
+If the velocity is along y-axis, 
+$$\mathbf{T}=\begin{pmatrix}
+-m&0&0\\ n m \beta&-m \gamma^{2}&0\\ 0&0&-m
+\end{pmatrix}
+
+\tag{30}$$
+
+If the velocity is along x-axis, 
+$$\mathbf{T}=\begin{pmatrix}
+\left(-m+n \beta m\right) \gamma^{2}+n m \beta&0&0\\ 0&-m+n \beta m&0\\ 0&0&-m+n \beta m
+\end{pmatrix}
+
+\tag{31}$$
+%[32].
+%[33].
+
 
 
 <!--
-[21].:
-式(19)转换为"Matlab"
-n^{3}-(1+i*t_i/\omega+\beta_x)/\beta_x*n+(1+i*t_i/\omega-\frac{\omega_p^{2}}{\omega^{2}})/\beta_x=0
-将"p=-(1+i*t_i/\omega+\beta_x)/\beta_x"记作为式(20)
-将"q=(1+i*t_i/\omega-\frac{\omega_p^{2}}{\omega^{2}})/\beta_x"记作为式(21)
-将式(5)记作为式(6)
-将式(4.1)代入到式(6)
+[33].:
+式(30)转换为"表达式"
 
 
-更新式(6)
-验证公式(M函数):...
-+[H函数](,计算折射率)
+
+更新式(31)
++[H函数](,讨论散度项)
 -->
     </mathjax></p>
 </div>
