@@ -92,176 +92,131 @@ body {
 <div class="content">
     <p><mathjax style=\"font-size:1.5em\">
 <!--
-+[H函数](,讨论散度项)
-+[上传临时网页](,讨论散度项)
++[H函数](,流体方程分析)
++[上传临时网页](,流体方程分析)
+参考1::https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations
+参考2::file:///media/xiantao/Elements/paper/LWFA/weilu_dissertation.pdf#page=46
 
-受力项特征:...
-
-+[新建阅读窗口](,受力项特征)
+计算折射率(html):...
+讨论散度项(html):...
+讨论密度扰动(html):...
+相对论流体方程(html):...
++[新建阅读窗口](,计算折射率)
++[新建阅读窗口](,讨论散度项)
++[新建阅读窗口](,相对论流体方程)
++[新建阅读窗口](,讨论密度扰动)
 -->
 
-<h2>Density wave</h2>
-Let's discuss effects of the density wave term. We will start from uniform flows,
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{\nabla}\cdot \vec{j_{1}}\right) \vec{v_{0}}=\vec{F}\tag{1}$$
-According to the approximation condition,
-$$\vec{\nabla} j_{i}\approx \frac{\partial j_{i}}{\partial z}\tag{2}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{z} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\left(\frac{\partial j_{z}}{\partial z}\right) \vec{v_{0}}=\vec{F}\tag{3}$$
-(Not necessary)<br>
-Then in frequency domain, it is,
-$$-i \omega \vec{j_{1}}+\left(\vec{v_{0}}\cdot i \vec{k}\right) \vec{j_{1}}+\left(i \vec{k}\cdot \vec{j_{1}}\right) \vec{v_{0}}=\vec{F}\tag{4}$$
-$$-\omega \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{k}\right) \vec{j_{1}}+\left(\vec{v_{0}} \vec{k}\right)\cdot \vec{j_{1}}=\vec{F}\tag{5}$$
-$$-\vec{j_{1}}+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \vec{j_{1}}+\frac{n}{c} \left(\vec{v_{0}} \hat{k}\right)\cdot \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{6}$$
+<h2>NS equations</h2>
+$$\frac{\partial \rho}{\partial t}+\vec{\nabla}\cdot \left(\rho \vec{v}\right)=0\tag{1}$$
+$$\frac{\partial}{\partial t}\left(\rho \vec{v}\right)+\vec{\nabla}\cdot \left(\rho \vec{v} \vec{v}\right)=\vec{F}\tag{2}$$
+In our cases, the temperature is assumed to be zero, so the energy conservation is same as the momentum conservation. And we studied the perturbation current caused by probe fields, 
+$$\vec{v}=\vec{v_{0}}+\vec{v_{1}}\tag{3}$$
+$$\vec{j_{1}}=\rho \vec{v_{1}}\tag{4}$$
 
-Assume that the wave vector is along the z-axis. We can define the following matrix,
-$$\mathbf{T}=\left(-1+\frac{v_{z} n}{c}\right) \mathbf{I}+\frac{n}{c} \left(\vec{v_{0}} \hat{k}\right)\tag{7}$$
-$$\mathbf{I}=\begin{pmatrix}
-1&0&0\\ 0&1&0\\ 0&0&1
-\end{pmatrix}
+Then equations become,
+$$\vec{\nabla}\cdot \vec{j_{1}}=0\tag{5}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}} \vec{j_{1}}+\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{6}$$
 
-\tag{8}$$
-$$\vec{v_{0}} \vec{k}=\begin{pmatrix}
-0&0&v_{x}\\ 0&0&v_{y}\\ 0&0&v_{z}
-\end{pmatrix}
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}} \vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{7}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\vec{\nabla}\cdot \left(\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{8}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{\nabla}\cdot \vec{j_{1}}\right) \vec{v_{0}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{9}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{10}$$
 
-\tag{9}$$
-$$\mathbf{T}=\left(-1+\frac{v_{z} n}{c}\right) \begin{pmatrix}
-1&0&0\\ 0&1&0\\ 0&0&1
-\end{pmatrix}
+<h2>Probe field perturbations</h2>
+Assuming that the probe beam is along the x-axis, then this equation can be farther simplified by considering following condition,
+$$\vec{\nabla} \vec{j_{1}}\approx \hat{x} \frac{\partial}{\partial x}\left(\vec{j_{1}}\right)\tag{11}$$
+Then
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{12}$$
+$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{13}$$
 
-+\frac{n}{c} \begin{pmatrix}
-0&0&v_{x}\\ 0&0&v_{y}\\ 0&0&v_{z}
-\end{pmatrix}
-
-\tag{10}$$
+The matrix is,
 $$\mathbf{T}=\begin{pmatrix}
-\left(-1+\frac{v_{z} n}{c}\right)&0&\frac{n}{c} v_{x}\\ 0&\left(-1+\frac{v_{z} n}{c}\right)&\frac{n}{c} v_{y}\\ 0&0&\left(-1+\frac{v_{z} n}{c}\right)+\frac{n}{c} v_{z}
+\frac{\partial v_{x}}{\partial x}&\frac{\partial v_{x}}{\partial y}&\frac{\partial v_{x}}{\partial z}\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{y}}{\partial y}&\frac{\partial v_{y}}{\partial z}\\ \frac{\partial v_{z}}{\partial x}&\frac{\partial v_{z}}{\partial y}&\frac{\partial v_{z}}{\partial z}
 \end{pmatrix}
 
-\tag{11}$$
-
-Then eigenvalues are,
-$$\left|\mathbf{T}\right|=0\tag{12}$$
-$$\left(\left(-1+\frac{v_{z} n}{c}\right)\right) \left(\left(-1+\frac{v_{z} n}{c}\right)+\frac{n}{c} v_{z}\right) \left(\left(-1+\frac{v_{z} n}{c}\right)\right)=0\tag{13}$$
-$$\left(1-\frac{v_{z}}{c} n\right) \left(1-\frac{2 v_{z}}{c} n\right) \left(1-\frac{v_{z}}{c} n\right)=0\tag{14}$$
-
-<h2>Relativistic uniform flows</h2>
-The flow equation is,
-$$\frac{\partial}{\partial t}\left(\mathbf{M} \vec{j_{1}}\right)+\vec{p_{0}} \left(\vec{\nabla}\cdot \vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \mathbf{M} \vec{j_{1}}=\vec{F}\tag{15}$$
-$$-i \omega \mathbf{M} \vec{j_{1}}+\vec{p_{0}} \left(i \vec{k}\cdot \vec{j_{1}}\right)+\left(\vec{v_{0}}\cdot i \vec{k}\right) \mathbf{M} \vec{j_{1}}=\vec{F}\tag{16}$$
-$$-\mathbf{M} \vec{j_{1}}+\frac{n}{c} \vec{p_{0}} \left(\hat{k}\cdot \vec{j_{1}}\right)+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \mathbf{M} \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{17}$$
-$$\left(-\mathbf{M}+\frac{n}{c} m \left(\vec{v_{0}} \hat{k}\right)+\frac{n}{c} \left(\vec{v_{0}}\cdot \hat{k}\right) \mathbf{M}\right) \vec{j_{1}}=\vec{F}/\left(i \omega\right)\tag{18}$$
-
-The response function is, 
-$$\mathbf{T}=-\mathbf{M}+n \left(\vec{\beta} \hat{k}\right) m+n \left(\vec{\beta}\cdot \hat{k}\right) \mathbf{M}\tag{19}$$
-$$\mathbf{M}=\gamma m_{e} \left(\mathbf{I}+\gamma^{2} \vec{\beta} \vec{\beta}\right)\tag{20}$$
-
-Now the wave vector is along z-axis and the velocity is in the xy-plane, 
-$$\vec{\beta}=\begin{pmatrix}
-v_{x}/c,&v_{y}/c,&0
-\end{pmatrix}
-
-\tag{21}$$
-$$\hat{k}=\begin{pmatrix}
-1,&0,&0
-\end{pmatrix}
-
-\tag{22}$$
-
-The mass matrix is,
-$$\mathbf{M}=\gamma m_{e} \left(\begin{pmatrix}
-1+\gamma^{2} \left(v_{x}/c\right) \left(v_{x}/c\right)&\gamma^{2} \left(v_{x}/c\right) \left(v_{y}/c\right)&0\\ \gamma^{2} \left(v_{y}/c\right) \left(v_{x}/c\right)&1+\gamma^{2} \left(v_{y}/c\right) \left(v_{y}/c\right)&0\\ 0&0&1
-\end{pmatrix}
-
-\right)\tag{23}$$
-$$\mathbf{M}=m \begin{pmatrix}
-1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
-\end{pmatrix}
-
-\tag{24}$$
-
-The responce matrix is,
-$$\mathbf{T}=-\mathbf{M}+n \left(\begin{pmatrix}
-v_{x}/c&0&0\\ v_{y}/c&0&0\\ 0&0&0
-\end{pmatrix}
-
-\right) m+n \left(\begin{pmatrix}
-v_{x}/c,&v_{y}/c,&0
-\end{pmatrix}
-
-\cdot \begin{pmatrix}
-1,&0,&0
-\end{pmatrix}
-
-\right) \mathbf{M}\tag{25}$$
-$$\mathbf{T}=-m \begin{pmatrix}
-1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
-\end{pmatrix}
-
-+n \left(\begin{pmatrix}
-v_{x}/c&0&0\\ v_{y}/c&0&0\\ 0&0&0
-\end{pmatrix}
-
-\right) m+n \beta_{x} m \begin{pmatrix}
-1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
-\end{pmatrix}
-
-\tag{26}$$
-$$\mathbf{T}=-\begin{pmatrix}
-m \left(1+\gamma^{2} \beta_{x}^{2}\right)&m \gamma^{2} \beta_{x} \beta_{y}&0\\ m \gamma^{2} \beta_{y} \beta_{x}&m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&m
-\end{pmatrix}
-
-+\begin{pmatrix}
-n m v_{x}/c&0&0\\ n m v_{y}/c&0&0\\ 0&0&0
-\end{pmatrix}
-
-+n \beta_{x} m \begin{pmatrix}
-1+\gamma^{2} \beta_{x}^{2}&\gamma^{2} \beta_{x} \beta_{y}&0\\ \gamma^{2} \beta_{y} \beta_{x}&1+\gamma^{2} \beta_{y}^{2}&0\\ 0&0&1
-\end{pmatrix}
-
-\tag{27}$$
-
++\left(\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}+\frac{\partial v_{z}}{\partial z}\right) \mathbf{I}\tag{14}$$
+We should also simplify this,
 $$\mathbf{T}=\begin{pmatrix}
-n m v_{x}/c-m \left(1+\gamma^{2} \beta_{x}^{2}\right)&-m \gamma^{2} \beta_{x} \beta_{y}&0\\ n m v_{y}/c-m \gamma^{2} \beta_{y} \beta_{x}&-m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&-m
+\frac{\partial v_{x}}{\partial x}&\frac{\partial v_{x}}{\partial y}&0\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{y}}{\partial y}&0\\ 0&0&0
 \end{pmatrix}
 
-+\begin{pmatrix}
-n \beta_{x} m \left(1+\gamma^{2} \beta_{x}^{2}\right)&n \beta_{x} m \gamma^{2} \beta_{x} \beta_{y}&0\\ n \beta_{x} m \gamma^{2} \beta_{y} \beta_{x}&n \beta_{x} m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&n \beta_{x} m
-\end{pmatrix}
-
-\tag{28}$$
++\left(\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}\right) \mathbf{I}\tag{15}$$
 $$\mathbf{T}=\begin{pmatrix}
-n m v_{x}/c-m \left(1+\gamma^{2} \beta_{x}^{2}\right)+n \beta_{x} m \left(1+\gamma^{2} \beta_{x}^{2}\right)&-m \gamma^{2} \beta_{x} \beta_{y}+n \beta_{x} m \gamma^{2} \beta_{x} \beta_{y}&0\\ n m v_{y}/c-m \gamma^{2} \beta_{y} \beta_{x}+n \beta_{x} m \gamma^{2} \beta_{y} \beta_{x}&-m \left(1+\gamma^{2} \beta_{y}^{2}\right)+n \beta_{x} m \left(1+\gamma^{2} \beta_{y}^{2}\right)&0\\ 0&0&-m+n \beta_{x} m
+2 \frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}&\frac{\partial v_{x}}{\partial y}&0\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{x}}{\partial x}+2 \frac{\partial v_{y}}{\partial y}&0\\ 0&0&\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}
 \end{pmatrix}
+
+\tag{16}$$
+$$\mathbf{T}=\begin{pmatrix}
+A&B&0\\ C&D&0\\ 0&0&E
+\end{pmatrix}
+
+\tag{17}$$
+The eigenvalues can be calculated by solving the equation,
+$$\left|\begin{pmatrix}
+A-t&B&0\\ C&D-t&0\\ 0&0&E-t
+\end{pmatrix}
+
+\right|=0\tag{18}$$
+$$\left(D-t\right) \left(E-t\right) \left(A-t\right)-B \left(E-t\right) C=0\tag{19}$$
+$$t^{2}-\left(A+D\right) t+A D-B C=0\tag{20}$$
+The solution is,
+$$t=\frac{A+D\pm \sqrt{\left(A+D\right)^{2}-4 \left(A D-B C\right)}}{2}\tag{21}$$
+$$t=\frac{A+D\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2}\tag{22}$$
+
+And eigenvectors are, 
+$$t a=a A+b B\tag{23}$$
+$$a=\frac{B}{t-A} b\tag{24}$$
+$$a=\frac{B}{\frac{A+D\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2}-A} b\tag{25}$$
+$$a=\frac{-2 B}{\left(A-D\right)\mp \sqrt{\left(A-D\right)^{2}+4 B C}} b\tag{26}$$
+$$a=\frac{-2 B \left(\left(A-D\right)\pm \sqrt{\left(A-D\right)^{2}+4 B C}\right)}{-4 B C} b\tag{27}$$
+$$a=\frac{\left(A-D\right)\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2 C} b\tag{28}$$
+
+
+<h2>Quasi-static approximation</h2>
+Let's use a new coordinates to describe equations,
+$$\begin{cases}
+s=t\\ \eta=z-c t
+\end{cases}
 
 \tag{29}$$
-
-<h3>Examples</h3>
-If the velocity is along y-axis, 
-$$\mathbf{T}=\begin{pmatrix}
--m&0&0\\ n m \beta&-m \gamma^{2}&0\\ 0&0&-m
-\end{pmatrix}
+$$\begin{cases}
+\frac{\partial }{\partial t}=\frac{\partial s}{\partial t} \frac{\partial }{\partial s}+\frac{\partial \eta}{\partial t} \frac{\partial }{\partial \eta}\\ \frac{\partial }{\partial z}=\frac{\partial s}{\partial z} \frac{\partial }{\partial s}+\frac{\partial \eta}{\partial z} \frac{\partial }{\partial \eta}
+\end{cases}
 
 \tag{30}$$
-
-If the velocity is along x-axis, 
-$$\mathbf{T}=\begin{pmatrix}
-\left(-m+n \beta m\right) \gamma^{2}+n m \beta&0&0\\ 0&-m+n \beta m&0\\ 0&0&-m+n \beta m
-\end{pmatrix}
+$$\begin{cases}
+\frac{\partial }{\partial t}=\frac{\partial }{\partial s}-c \frac{\partial }{\partial \eta}\\ \frac{\partial }{\partial z}=\frac{\partial }{\partial \eta}
+\end{cases}
 
 \tag{31}$$
-%[32].
-%[33].
+
+Then eqn.[13] will becomes,
+$$\frac{\partial}{\partial s}\left(\vec{j_{1}}\right)+\left(v_{x}-c\right) \frac{\partial}{\partial \eta}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{32}$$
+By using the approximation, \(\partial j/\partial s\approx 0\), we have,
+$$\left(v_{x}-c\right) \frac{\partial}{\partial \eta}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{33}$$
+
+OK, let's put \(F=F_0 exp(i k \eta)\) into the equation,
+$$\left(v_{x}-c\right) \frac{\partial j_{1}}{\partial \eta}+t_{1} j_{1}=F_{0} exp \left( i k \eta \right)\tag{34}$$
+$$j_{1}=A exp \left( i k \eta \right)\tag{35}$$
+$$\left(v_{x}-c\right) i k A+t_{1} A=F_{0}\tag{36}$$
+
+So,
+$$A=\frac{F_{0}}{t_{1}+i \left(v_{x}-c\right) k}\tag{37}$$
 
 
 
 <!--
-[33].:
-式(30)转换为"表达式"
+[37].:
+式(1)转换为"表达式"
+将"A=\frac{F_0}{t_1+i*(v_x-c)*k}"记作为式(37)
 
+验证公式(M函数):...
++[新建阅读窗口](,验证公式)
 
-
-更新式(31)
-+[H函数](,讨论散度项)
+更新式(25)
+的([30].,表达式)->+[显示](,表达式)
++[H函数](,流体方程分析)
 -->
     </mathjax></p>
 </div>
