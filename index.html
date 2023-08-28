@@ -13,8 +13,20 @@ LaTeX数学记号::https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
+<script>
+function print() {
+    var text;
+    document.getElementById("cmd_window").innerHTML+="<br>";
+    for (var i=0; i < arguments.length; i++) {
+        text=arguments[i];
+        document.getElementById("cmd_window").innerHTML+=" "+text;
+    }
+}
+</script>
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 %[结构语言核心JS]
 
 
@@ -92,131 +104,47 @@ body {
 <div class="content">
     <p><mathjax style=\"font-size:1.5em\">
 <!--
-+[H函数](,流体方程分析)
-+[上传临时网页](,流体方程分析)
-参考1::https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations
-参考2::file:///media/xiantao/Elements/paper/LWFA/weilu_dissertation.pdf#page=46
-
-计算折射率(html):...
-讨论散度项(html):...
-讨论密度扰动(html):...
-相对论流体方程(html):...
-+[新建阅读窗口](,计算折射率)
-+[新建阅读窗口](,讨论散度项)
-+[新建阅读窗口](,相对论流体方程)
-+[新建阅读窗口](,讨论密度扰动)
+运行指令"nautilus 文档/物理问题/ShadowSpectrometer"
+在"文档/物理问题/ShadowSpectrometer/fig_8d.png"处, 保存当前图像
++[H函数](,原理验证)
+模拟场景:...
++[新建阅读窗口](,模拟场景)
 -->
 
-<h2>NS equations</h2>
-$$\frac{\partial \rho}{\partial t}+\vec{\nabla}\cdot \left(\rho \vec{v}\right)=0\tag{1}$$
-$$\frac{\partial}{\partial t}\left(\rho \vec{v}\right)+\vec{\nabla}\cdot \left(\rho \vec{v} \vec{v}\right)=\vec{F}\tag{2}$$
-In our cases, the temperature is assumed to be zero, so the energy conservation is same as the momentum conservation. And we studied the perturbation current caused by probe fields, 
-$$\vec{v}=\vec{v_{0}}+\vec{v_{1}}\tag{3}$$
-$$\vec{j_{1}}=\rho \vec{v_{1}}\tag{4}$$
-
-Then equations become,
-$$\vec{\nabla}\cdot \vec{j_{1}}=0\tag{5}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}} \vec{j_{1}}+\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{6}$$
-
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}} \vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{7}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\vec{\nabla}\cdot \left(\vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\vec{\nabla}\cdot \left(\vec{j_{1}} \vec{v_{0}}\right)=\vec{F}\tag{8}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{\nabla}\cdot \vec{j_{1}}\right) \vec{v_{0}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{9}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{v_{0}}\cdot \vec{\nabla}\right) \vec{j_{1}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{10}$$
-
-<h2>Probe field perturbations</h2>
-Assuming that the probe beam is along the x-axis, then this equation can be farther simplified by considering following condition,
-$$\vec{\nabla} \vec{j_{1}}\approx \hat{x} \frac{\partial}{\partial x}\left(\vec{j_{1}}\right)\tag{11}$$
-Then
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\left(\vec{\nabla}\cdot \vec{v_{0}}\right) \vec{j_{1}}+\left(\vec{j_{1}}\cdot \vec{\nabla}\right) \vec{v_{0}}=\vec{F}\tag{12}$$
-$$\frac{\partial}{\partial t}\left(\vec{j_{1}}\right)+v_{x} \frac{\partial}{\partial z}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{13}$$
-
-The matrix is,
-$$\mathbf{T}=\begin{pmatrix}
-\frac{\partial v_{x}}{\partial x}&\frac{\partial v_{x}}{\partial y}&\frac{\partial v_{x}}{\partial z}\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{y}}{\partial y}&\frac{\partial v_{y}}{\partial z}\\ \frac{\partial v_{z}}{\partial x}&\frac{\partial v_{z}}{\partial y}&\frac{\partial v_{z}}{\partial z}
-\end{pmatrix}
-
-+\left(\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}+\frac{\partial v_{z}}{\partial z}\right) \mathbf{I}\tag{14}$$
-We should also simplify this,
-$$\mathbf{T}=\begin{pmatrix}
-\frac{\partial v_{x}}{\partial x}&\frac{\partial v_{x}}{\partial y}&0\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{y}}{\partial y}&0\\ 0&0&0
-\end{pmatrix}
-
-+\left(\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}\right) \mathbf{I}\tag{15}$$
-$$\mathbf{T}=\begin{pmatrix}
-2 \frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}&\frac{\partial v_{x}}{\partial y}&0\\ \frac{\partial v_{y}}{\partial x}&\frac{\partial v_{x}}{\partial x}+2 \frac{\partial v_{y}}{\partial y}&0\\ 0&0&\frac{\partial v_{x}}{\partial x}+\frac{\partial v_{y}}{\partial y}
-\end{pmatrix}
-
-\tag{16}$$
-$$\mathbf{T}=\begin{pmatrix}
-A&B&0\\ C&D&0\\ 0&0&E
-\end{pmatrix}
-
-\tag{17}$$
-The eigenvalues can be calculated by solving the equation,
-$$\left|\begin{pmatrix}
-A-t&B&0\\ C&D-t&0\\ 0&0&E-t
-\end{pmatrix}
-
-\right|=0\tag{18}$$
-$$\left(D-t\right) \left(E-t\right) \left(A-t\right)-B \left(E-t\right) C=0\tag{19}$$
-$$t^{2}-\left(A+D\right) t+A D-B C=0\tag{20}$$
-The solution is,
-$$t=\frac{A+D\pm \sqrt{\left(A+D\right)^{2}-4 \left(A D-B C\right)}}{2}\tag{21}$$
-$$t=\frac{A+D\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2}\tag{22}$$
-
-And eigenvectors are, 
-$$t a=a A+b B\tag{23}$$
-$$a=\frac{B}{t-A} b\tag{24}$$
-$$a=\frac{B}{\frac{A+D\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2}-A} b\tag{25}$$
-$$a=\frac{-2 B}{\left(A-D\right)\mp \sqrt{\left(A-D\right)^{2}+4 B C}} b\tag{26}$$
-$$a=\frac{-2 B \left(\left(A-D\right)\pm \sqrt{\left(A-D\right)^{2}+4 B C}\right)}{-4 B C} b\tag{27}$$
-$$a=\frac{\left(A-D\right)\pm \sqrt{\left(A-D\right)^{2}+4 B C}}{2 C} b\tag{28}$$
 
 
-<h2>Quasi-static approximation</h2>
-Let's use a new coordinates to describe equations,
-$$\begin{cases}
-s=t\\ \eta=z-c t
-\end{cases}
+<h2>Scattered electron distribution</h2>
+By using GEANT4 simulations, we found monoenergetic electrons scattered by a fiducial wire distribute in a Gaussian distribution,
+$$f \left( \theta \right)=e^{-\theta^{2}/\sigma^{2}}\tag{1}$$
+The \(\sigma\) of the Gaussian distribution is a function of incoming electron energy. 
+$$\sigma \left( E,d \right)=A \left( d \right)/E\tag{2}$$
+<img src="output/paper/spectrometer/v4_1/highEnergyShadow.png" width="80%"><br>
 
-\tag{29}$$
-$$\begin{cases}
-\frac{\partial }{\partial t}=\frac{\partial s}{\partial t} \frac{\partial }{\partial s}+\frac{\partial \eta}{\partial t} \frac{\partial }{\partial \eta}\\ \frac{\partial }{\partial z}=\frac{\partial s}{\partial z} \frac{\partial }{\partial s}+\frac{\partial \eta}{\partial z} \frac{\partial }{\partial \eta}
-\end{cases}
-
-\tag{30}$$
-$$\begin{cases}
-\frac{\partial }{\partial t}=\frac{\partial }{\partial s}-c \frac{\partial }{\partial \eta}\\ \frac{\partial }{\partial z}=\frac{\partial }{\partial \eta}
-\end{cases}
-
-\tag{31}$$
-
-Then eqn.[13] will becomes,
-$$\frac{\partial}{\partial s}\left(\vec{j_{1}}\right)+\left(v_{x}-c\right) \frac{\partial}{\partial \eta}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{32}$$
-By using the approximation, \(\partial j/\partial s\approx 0\), we have,
-$$\left(v_{x}-c\right) \frac{\partial}{\partial \eta}\left(\vec{j_{1}}\right)+\mathbf{T} \vec{j_{1}}=\vec{F}\tag{33}$$
-
-OK, let's put \(F=F_0 exp(i k \eta)\) into the equation,
-$$\left(v_{x}-c\right) \frac{\partial j_{1}}{\partial \eta}+t_{1} j_{1}=F_{0} exp \left( i k \eta \right)\tag{34}$$
-$$j_{1}=A exp \left( i k \eta \right)\tag{35}$$
-$$\left(v_{x}-c\right) i k A+t_{1} A=F_{0}\tag{36}$$
-
-So,
-$$A=\frac{F_{0}}{t_{1}+i \left(v_{x}-c\right) k}\tag{37}$$
+After running a large amount of simulations with fiducials having different diameters, we found the relation,
+$$A \left( d \right)=207\ d^{0.5582}\tag{3}$$
+<img src="output/paper/spectrometer/v4_1/scatterFactor.png" width="80%"><br>
+<br>
+which means, electron beams with arbitrary spectrum will be scattered in the following distribution,
+$$f \left( \theta \right)=\sum_{n}{A\ _{n}\ exp \left( -\theta^{2}/\sigma\ _{n}^{2} \right)}\tag{4}$$
 
 
 
 <!--
-[37].:
-式(1)转换为"表达式"
-将"A=\frac{F_0}{t_1+i*(v_x-c)*k}"记作为式(37)
+[4].:
+将"f(\theta)=\sum_{}^{}{n}{A[n]*exp(-\theta^2/\sigma[n]^2)}"记作为式(4)
+将"A(d)=207*d^0.5582"记作为式(3)
+式(2)转换为"表达式"
 
-验证公式(M函数):...
-+[新建阅读窗口](,验证公式)
+影子图(图片)::output/paper/spectrometer/v4_1/highEnergyShadow.png
+散射图(图片)::output/paper/spectrometer/v4_1/scatterFactor.png
 
-更新式(25)
-的([30].,表达式)->+[显示](,表达式)
-+[H函数](,流体方程分析)
+
++[复制结构](,获取散射参数)
+获取散射参数(M函数):...
+测试算法(M函数):...
++[新建阅读窗口](,测试算法)
++[H函数](,原理验证)
++[上传临时网页](,原理验证)
 -->
     </mathjax></p>
 </div>
